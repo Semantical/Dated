@@ -11,6 +11,11 @@ import Foundation
 public struct LocalDate: Hashable, Sendable {
     let date: Date
     let timeZone: TimeZone
+    
+    /// Creates a new local date from the current date at the moment of access.
+    public init() {
+        self = .now
+    }
 
     /// Creates a new local date using the current time zone.
     public init(_ date: CalendarDate) {
@@ -18,22 +23,20 @@ public struct LocalDate: Hashable, Sendable {
     }
 
     /// Creates a new local date using the current time zone.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         self.init(date: date, timeZone: CalendarDate.calendar.timeZone)
     }
 
     /// Returns the current date in the current time zone at the
     /// moment of access.
     public static var now: LocalDate {
-        .init(date: Date.now)
+        .init(Date.now)
     }
 
     init(date: Date, timeZone: TimeZone) {
         self.date = date
 
-        self.timeZone = TimeZone(secondsFromGMT:
-                                    timeZone.secondsFromGMT(for: date)
-        )!
+        self.timeZone = TimeZone(secondsFromGMT: timeZone.secondsFromGMT(for: date))!
     }
 
 

@@ -13,6 +13,11 @@ public struct CalendarDate: Hashable, Sendable {
     ///
     /// - note: The ordering of ``CalendarDate`` values is the same as the ordering of their IDs. If both `date1` and `date2` are ``CalendarDate`` values, `date1` is ordered before `date2` when its ID is lower than `date2`'s.
     public let id: Int
+    
+    /// Creates a calendar date from the current date at the moment of access.
+    public init() {
+        self.init(Date.now)
+    }
 
     /// Creates a calendar date from the given identifier.
     ///
@@ -28,7 +33,7 @@ public struct CalendarDate: Hashable, Sendable {
     }
 
     /// Creates a calendar date in the user's preferrend calendar.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.minute, .hour, .day, .month, .year, .era], from: date
         )
@@ -76,7 +81,7 @@ public struct CalendarDate: Hashable, Sendable {
 
     /// The week containing the given calendar date.
     public var week: Week {
-        return .init(date: date)
+        return .init(date)
     }
 
     /// The month containing the given calendar date.
@@ -203,14 +208,13 @@ public struct CalendarDate: Hashable, Sendable {
     /// Returns a calendar date offset by adding components to a given
     /// calendar date.
     public static func + (lhs: CalendarDate, rhs: Components) -> CalendarDate {
-        .init(date: CalendarDate.calendar.date(byAdding: rhs.nativeComponents,
-                  to: lhs.date)!)
+        .init(CalendarDate.calendar.date(byAdding: rhs.nativeComponents, to: lhs.date)!)
     }
 
     /// Returns a calendar date offset by subtracting components from a
     /// given calendar date.
     public static func - (lhs: CalendarDate, rhs: Components) -> CalendarDate {
-        .init(date: CalendarDate.calendar.date(byAdding: rhs.negated().nativeComponents, to: lhs.date)!)
+        .init(CalendarDate.calendar.date(byAdding: rhs.negated().nativeComponents, to: lhs.date)!)
     }
 
     /// Adds the given components to a calendar date.
@@ -227,14 +231,10 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Getting Temporal Boundaries
 
     /// A calendar date in the distant future.
-    public static let distantFuture = CalendarDate(
-        date: Date.distantFuture
-    )
+    public static let distantFuture = CalendarDate(Date.distantFuture)
 
     /// A local calendar in the distant past.
-    public static let distantPast = CalendarDate(
-        date: Date.distantPast
-    )
+    public static let distantPast = CalendarDate(Date.distantPast)
 
 
     // MARK: - Current Calendar
@@ -251,7 +251,7 @@ public struct CalendarDate: Hashable, Sendable {
 
 extension CalendarDate: InstantProtocol {
     public func advanced(by duration: TimeDifference) -> CalendarDate {
-        .init(date: date + Double(duration.minutes * 60))
+        .init(date + Double(duration.minutes * 60))
     }
 
     public func duration(to other: CalendarDate) -> TimeDifference {

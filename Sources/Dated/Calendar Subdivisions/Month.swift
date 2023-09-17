@@ -34,7 +34,7 @@ public struct Month: CalendarSubdivision {
     }
 
     /// Creates a month in the user's preferrend calendar.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.month, .year, .era], from: date
         )
@@ -79,7 +79,7 @@ public struct Month: CalendarSubdivision {
 
     /// The first moment of this month.
     public var start: CalendarDate {
-        CalendarDate(date: firstInstance)
+        CalendarDate(firstInstance)
     }
 
 

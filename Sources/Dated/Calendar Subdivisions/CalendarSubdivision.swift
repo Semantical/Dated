@@ -29,7 +29,7 @@ where Stride == Int {
     init(id: Int)
 
     /// Creates a calendar subdivision in the user's preferrend calendar.
-    init(date: Date)
+    init(_ date: Date)
 
     /// Creates a calendar subdivision in the user's preferrend calendar.
     init(_ date: CalendarDate)
@@ -45,7 +45,13 @@ extension CalendarSubdivision {
     /// Returns a calendar subdivision containing the current date at the
     /// moment of access.
     public static var current: Self {
-        self.init(date: .now)
+        self.init()
+    }
+    
+    /// Creates a calendar subdivision containing the current date at the
+    /// moment of access.
+    public init() {
+        self.init(Date.now)
     }
 
     /// The time span covered by the given calendar subdivision.
@@ -58,13 +64,13 @@ extension CalendarSubdivision {
     /// given calendar subdivision.
     public static func + (lhs: Self, rhs: CalendarDate.Components) -> Self {
 //        (lhs.start + rhs).subdivision(for: self.unit) as! Self
-           .init(date: (lhs.start + rhs).date)
+           .init((lhs.start + rhs).date)
     }
 
     /// Returns a calendar subdivision offset by subtracting components from a
     /// given calendar subdivision.
     public static func - (lhs: Self, rhs: CalendarDate.Components) -> Self {
-        .init(date: (lhs.start + rhs.negated()).date)
+        .init((lhs.start + rhs.negated()).date)
     }
 
     /// Adds the given components to a calendar subdivision.
@@ -120,7 +126,7 @@ extension CalendarSubdivision {
         let calendar = CalendarDate.calendar
         let range = calendar.range(of: smaller, in: larger, for: date)!
         let result = range.map {
-            Self(date: calendar.date(bySetting: smaller,
+            Self(calendar.date(bySetting: smaller,
                                value: $0,
                                of: date)!)
         }

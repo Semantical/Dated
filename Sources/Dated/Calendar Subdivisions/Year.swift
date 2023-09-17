@@ -33,7 +33,7 @@ public struct Year: CalendarSubdivision {
     }
 
     /// Creates a year in the user's preferrend calendar.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.year, .era], from: date
         )
@@ -72,7 +72,7 @@ public struct Year: CalendarSubdivision {
 
     /// The first moment of this year.
     public var start: CalendarDate {
-        CalendarDate(date: firstInstance)
+        CalendarDate(firstInstance)
     }
 
     /// The list of all weeks in the given year ordered by date.

@@ -13,7 +13,13 @@ import Foundation
 /// dates. Combining a time difference with a calendar date yields a CalendarDateInterval value.
 public struct TimeDifference: Hashable, Sendable {
     public let minutes: Int
+    
+    /// Creates a time difference of 0 minutes.
+    public init() {
+        self.minutes = 0
+    }
 
+    /// Creates a time difference based on the given number of minutes.
     public init(minutes: Int) {
         self.minutes = minutes
     }

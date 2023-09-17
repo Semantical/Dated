@@ -51,8 +51,8 @@ public struct CalendarDateInterval: Hashable, Sendable {
 
         func addInterval(from start: Date, to end: Date) {
             let interval = CalendarDateInterval(
-                start: CalendarDate(date: start),
-                end: CalendarDate(date: end))
+                start: CalendarDate(start),
+                end: CalendarDate(end))
             result.append(interval)
         }
 

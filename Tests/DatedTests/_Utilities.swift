@@ -12,9 +12,7 @@ import Foundation
 
 extension CalendarDate {
     static var firstOfJune2023: CalendarDate {
-        CalendarDate(date: calendar.date(from:
-                .init(year: 2023, month: 6, day: 1)
-        )!)
+        CalendarDate(calendar.date(from: .init(year: 2023, month: 6, day: 1))!)
     }
 }
 

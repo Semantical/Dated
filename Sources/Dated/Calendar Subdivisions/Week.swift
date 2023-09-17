@@ -29,11 +29,11 @@ public struct Week: CalendarSubdivision {
 
     /// Creates a week in the user's preferrend calendar.
     public init(_ date: CalendarDate) {
-        self.init(date: date.date)
+        self.init(date.date)
     }
 
     /// Creates a week in the user's preferrend calendar.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.weekOfYear, .yearForWeekOfYear, .era], from: date
         )
@@ -80,7 +80,7 @@ public struct Week: CalendarSubdivision {
 
     /// The first moment of this week.
     public var start: CalendarDate {
-        CalendarDate(date: firstInstance)
+        CalendarDate(firstInstance)
     }
 
     /// The list of weekdays ordered by date.

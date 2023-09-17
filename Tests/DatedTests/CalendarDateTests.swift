@@ -14,7 +14,7 @@ final class CalendarDateTests: XCTestCase {
             CalendarDate.calendar = calendar
 
             Date.withRandom(10_000) { date in
-                let calendarDate = CalendarDate(date: date)
+                let calendarDate = CalendarDate(date)
                 let diff = date.timeIntervalSince(calendarDate.date)
                 // CalendarDate has a granularity of minute.
                 XCTAssertLessThan(abs(diff), 60)
@@ -27,7 +27,7 @@ final class CalendarDateTests: XCTestCase {
             CalendarDate.calendar = calendar
 
             Date.withRandom(50) { date in
-                let calendarDate = CalendarDate(date: date)
+                let calendarDate = CalendarDate(date)
                 let components = calendar.dateComponents(
                     [.minute, .hour, .day, .month, .year],
                     from: date)
@@ -45,7 +45,7 @@ final class CalendarDateTests: XCTestCase {
             CalendarDate.calendar = calendar
 
             Date.withRandom(50) {
-                let date = CalendarDate(date: $0)
+                let date = CalendarDate($0)
                 date.tryContainingSubdivision(
                     for: .day,
                     using: [.day, .month, .year, .era], in: calendar
@@ -68,7 +68,7 @@ final class CalendarDateTests: XCTestCase {
 
             Date.withRandom(20) { date1 in
                 Date.withRandom(20) { date2 in
-                    let ordering = CalendarDate(date: date1).id < CalendarDate(date: date2).id
+                    let ordering = CalendarDate(date1).id < CalendarDate(date2).id
                     XCTAssertEqual(date1 < date2, ordering)
                 }
             }

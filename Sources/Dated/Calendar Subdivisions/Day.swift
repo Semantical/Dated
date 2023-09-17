@@ -33,7 +33,7 @@ public struct Day: CalendarSubdivision {
     }
 
     /// Creates a day in the user's preferrend calendar.
-    public init(date: Date = .now) {
+    public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.day, .month, .year, .era], from: date
         )
@@ -100,7 +100,7 @@ public struct Day: CalendarSubdivision {
 
     /// The first moment of this day.
     public var start: CalendarDate {
-        CalendarDate(date: firstInstance)
+        CalendarDate(firstInstance)
     }
 
 
@@ -108,7 +108,7 @@ public struct Day: CalendarSubdivision {
 
     /// The week containing the receiver.
     public var week: Week {
-        return .init(date: firstInstance)
+        return .init(firstInstance)
     }
 
     /// The month containing the receiver.
