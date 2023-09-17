@@ -9,7 +9,7 @@ import Foundation
 
 /// A type that represents a calendar subdivision like day, week, month,
 /// or year.
-public protocol CalendarSubdivision: Hashable, Codable, Comparable, Strideable
+public protocol CalendarSubdivision: Hashable, Sendable, Codable, Comparable, Strideable
 where Stride == Int {
 
     /// The calendrical unit of the given calendar subdivision.

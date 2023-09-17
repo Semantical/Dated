@@ -8,7 +8,7 @@
 import Foundation
 
 /// A date preserving the original time zone at the moment it was created.
-public struct LocalDate: Hashable {
+public struct LocalDate: Hashable, Sendable {
     let date: Date
     let timeZone: TimeZone
 

@@ -8,7 +8,7 @@
 import Foundation
 
 /// The span of time between a specific start date and end date.
-public struct CalendarDateInterval: Equatable {
+public struct CalendarDateInterval: Hashable, Sendable {
     /// The start date.
     public let start: CalendarDate
 

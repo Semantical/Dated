@@ -8,7 +8,7 @@
 import Foundation
 
 /// A point in time relative to the current calendar.
-public struct CalendarDate {
+public struct CalendarDate: Hashable, Sendable {
     /// An integer suitable to be used as a key in a database table.
     ///
     /// - note: The ordering of ``CalendarDate`` values is the same as the ordering of their IDs. If both `date1` and `date2` are ``CalendarDate`` values, `date1` is ordered before `date2` when its ID is lower than `date2`'s.
@@ -245,7 +245,7 @@ public struct CalendarDate {
 }
 
 
-// MARK: -
+// MARK: - Conformances
 
 // InstantProtocol Conformance
 
