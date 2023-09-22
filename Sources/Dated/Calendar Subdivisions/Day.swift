@@ -1,6 +1,6 @@
 //
 //  Day.swift
-//  SemanticalKit
+//  Dated
 //
 //  Created by Jürgen on 19.05.23.
 //

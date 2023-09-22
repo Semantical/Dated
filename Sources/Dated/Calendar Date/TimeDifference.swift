@@ -1,6 +1,6 @@
 //
 //  TimeDifference.swift
-//  SemanticalKit
+//  Dated
 //
 //  Created by Jürgen on 28.05.23.
 //
@@ -12,59 +12,65 @@ import Foundation
 /// On its own, a time difference does not specify a span between specific
 /// dates. Combining a time difference with a calendar date yields a CalendarDateInterval value.
 public struct TimeDifference: Hashable, Sendable {
-    public let minutes: Int
+    public let seconds: Int
     
-    /// Creates a time difference of 0 minutes.
+    public var minutes: Int { seconds / 60 }
+    
+    /// Creates a time difference of 0 seconds.
     public init() {
-        self.minutes = 0
+        self.seconds = 0
     }
 
     /// Creates a time difference based on the given number of minutes.
-    public init(minutes: Int) {
-        self.minutes = minutes
+    public init(seconds: Int) {
+        self.seconds = seconds
+    }
+
+    public static func seconds(_ value: Int) -> TimeDifference {
+        TimeDifference(seconds: value)
     }
 
     public static func minutes(_ value: Int) -> TimeDifference {
-        TimeDifference(minutes: value)
+        TimeDifference(seconds: value * 60)
     }
 }
 
 extension TimeDifference: DurationProtocol {
     public static func + (lhs: TimeDifference, rhs: TimeDifference) -> TimeDifference {
-        .minutes(lhs.minutes + rhs.minutes)
+        .seconds(lhs.seconds + rhs.seconds)
     }
 
     public static func - (lhs: TimeDifference, rhs: TimeDifference) -> TimeDifference {
-        .minutes(lhs.minutes - rhs.minutes)
+        .seconds(lhs.seconds - rhs.seconds)
     }
 
     public static func * (lhs: TimeDifference, rhs: Int) -> TimeDifference {
-        .minutes(lhs.minutes * rhs)
+        .seconds(lhs.seconds * rhs)
     }
 
     public static func / (lhs: TimeDifference, rhs: Int) -> TimeDifference {
-        .minutes(lhs.minutes / rhs)
+        .seconds(lhs.seconds / rhs)
     }
 
     public static func / (lhs: TimeDifference, rhs: TimeDifference) -> Double {
-        Double(lhs.minutes) / Double(rhs.minutes)
+        Double(lhs.seconds) / Double(rhs.seconds)
     }
 
     public static var zero: TimeDifference {
-        .minutes(0)
+        .seconds(0)
     }
 
     public static func < (lhs: TimeDifference, rhs: TimeDifference) -> Bool {
-        lhs.minutes < rhs.minutes
+        lhs.seconds < rhs.seconds
     }
 }
 
 extension TimeDifference: Codable {
     public init(from decoder: Decoder) throws {
-        minutes = try Int(from: decoder)
+        seconds = try Int(from: decoder)
     }
 
     public func encode(to encoder: Encoder) throws {
-        try minutes.encode(to: encoder)
+        try seconds.encode(to: encoder)
     }
 }

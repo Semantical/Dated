@@ -1,6 +1,6 @@
 //
 //  LocalDate.swift
-//  Semantical
+//  Dated
 //
 //  Created by Jürgen on 15.05.23.
 //

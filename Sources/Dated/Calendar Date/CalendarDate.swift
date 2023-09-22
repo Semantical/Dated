@@ -1,6 +1,6 @@
 //
 //  CalendarDate.swift
-//  SemanticalKit
+//  Dated
 //
 //  Created by Jürgen on 25.05.23.
 //
@@ -35,11 +35,12 @@ public struct CalendarDate: Hashable, Sendable {
     /// Creates a calendar date in the user's preferrend calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
-            [.minute, .hour, .day, .month, .year, .era], from: date
+            [.second, .minute, .hour, .day, .month, .year, .era], from: date
         )
         let reconstructedDate = CalendarDate.calendar.date(from: components)!
-        let flag = abs(date.timeIntervalSince(reconstructedDate)) >= 60.0
-        self.init(components: components, dLSTFlag: flag)
+        // Daylight saving time
+        let dLST = abs(date.timeIntervalSince(reconstructedDate)) >= 60.0
+        self.init(components: components, dLSTFlag: dLST)
     }
 
     /// Returns the current date at the moment of access.
@@ -47,6 +48,7 @@ public struct CalendarDate: Hashable, Sendable {
 
     init(components: DateComponents, dLSTFlag: Bool = false) {
         let dLST   = (dLSTFlag ? 1 : 0)       << dLSTOffset
+        let second = (components.second ?? 0) << secondOffset
         let minute = (components.minute ?? 0) << minuteOffset
         let hour   = (components.hour   ?? 0) << hourOffset
         let day    = (components.day    ?? 0) << dayOffset
@@ -54,7 +56,7 @@ public struct CalendarDate: Hashable, Sendable {
         let year   = (components.year   ?? 0) << yearOffset
         let era    = (components.era    ?? 0) << eraOffset
 
-        id = dLST + minute + hour + day + month + year + era
+        id = dLST + second + minute + hour + day + month + year + era
     }
 
 
@@ -62,11 +64,18 @@ public struct CalendarDate: Hashable, Sendable {
 
     /// The date represented by the given calendar date.
     public var date: Date {
-        let components = DateComponents(era: era, year: yearOfEra, month: monthOfYear, day: dayOfMonth, hour: hourOfDay, minute: minuteOfHour)
+        let components = DateComponents(era: era,
+                                        year: yearOfEra,
+                                        month: monthOfYear,
+                                        day: dayOfMonth,
+                                        hour: hourOfDay,
+                                        minute: minuteOfHour,
+                                        second: secondOfHour)
         let date = CalendarDate.calendar.date(from: components)!
         return dLST ? date.addingTimeInterval(3600): date
     }
 
+    // Daylight saving time
     var dLST: Bool {
         ((id & dLSTMask) >> dLSTOffset) ==  1
     }
@@ -109,6 +118,11 @@ public struct CalendarDate: Hashable, Sendable {
 
     // MARK: - Accessing Calendar Components
 
+    /// The second component.
+    public var secondOfHour: Int {
+        (id & secondMask) >> secondOffset
+    }
+    
     /// The minute component.
     public var minuteOfHour: Int {
         (id & minuteMask) >> minuteOffset
@@ -251,11 +265,11 @@ public struct CalendarDate: Hashable, Sendable {
 
 extension CalendarDate: InstantProtocol {
     public func advanced(by duration: TimeDifference) -> CalendarDate {
-        .init(date + Double(duration.minutes * 60))
+        .init(date + Double(duration.seconds))
     }
 
     public func duration(to other: CalendarDate) -> TimeDifference {
-        .minutes(Int(other.date.timeIntervalSince(date) / 60.0))
+        .seconds(Int(other.date.timeIntervalSince(date)))
     }
 }
 
@@ -282,7 +296,7 @@ extension CalendarDate: Comparable {
 
 extension CalendarDate: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth) \(hourOfDay):\(minuteOfHour)"
+        "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth) \(hourOfDay):\(minuteOfHour):\(secondOfHour)"
     }
 }
 
@@ -291,6 +305,7 @@ extension CalendarDate: CustomDebugStringConvertible {
 // Number of bits each calendar subdivision is represented with.
 
 let dLSTBits   = 1
+let secondBits = 6 // 0...59
 let minuteBits = 6 // 0...59
 let hourBits   = 5 // 0...23
 let dayBits    = 5 // 1...31
@@ -300,14 +315,15 @@ let monthBits  = 4 // 1..<13 (Hebrew, Ethiopic)
 let weekBits  =  6 // 1...55 (Hebrew)
 
 // The following two components will always be present.
-let yearBits  = 23 // 0..<8_388_608 (> 7515, Ethiopic Amete Alem)
-let eraBits   = 19 // 0..<1_048_576 (>  236, Japanese)
+let yearBits  = 20 // 0..<1_048_576 (> 7515, Ethiopic Amete Alem)
+let eraBits   = 16 // 0..<65_536 (>  236, Japanese)
 
 
 // The offset at which a calendar subdivision appears in the bit pattern.
 
 let dLSTOffset   = 0
-let minuteOffset = dLSTOffset   + dLSTBits
+let secondOffset = dLSTOffset   + dLSTBits
+let minuteOffset = secondOffset + secondBits
 let hourOffset   = minuteOffset + minuteBits
 let dayOffset    = hourOffset   + hourBits
 let monthOffset  = dayOffset    + dayBits
@@ -323,6 +339,7 @@ let weekOffset   = dayOffset
 func mask(_ bits: Int) -> Int { (1 << bits) - 1 }
 
 let dLSTMask   = mask(dLSTBits)   << dLSTOffset
+let secondMask = mask(secondBits) << secondOffset
 let minuteMask = mask(minuteBits) << minuteOffset
 let hourMask   = mask(hourBits)   << hourOffset
 let dayMask    = mask(dayBits)    << dayOffset

@@ -1,6 +1,6 @@
 //
 //  Month.swift
-//  Semantical Kit
+//  Dated
 //
 //  Created by Jürgen on 19.05.23.
 //

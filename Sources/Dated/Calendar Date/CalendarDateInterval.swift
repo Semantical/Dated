@@ -1,6 +1,6 @@
 //
 //  CalendarDateInterval.swift
-//  SemanticalKit
+//  Dated
 //
 //  Created by Jürgen on 18.05.23.
 //
@@ -18,7 +18,7 @@ public struct CalendarDateInterval: Hashable, Sendable {
     /// Initializes a date interval with start and end dates set to the
     /// current date and the duration set to 0.
     public init() {
-        self.init(start: .now, duration: .minutes(0))
+        self.init(start: .now, duration: .seconds(0))
     }
 
     /// Initializes a date interval with the specified start date and duration.
@@ -50,9 +50,8 @@ public struct CalendarDateInterval: Hashable, Sendable {
         var result: [CalendarDateInterval] = []
 
         func addInterval(from start: Date, to end: Date) {
-            let interval = CalendarDateInterval(
-                start: CalendarDate(start),
-                end: CalendarDate(end))
+            let interval = CalendarDateInterval(start: CalendarDate(start),
+                                                end: CalendarDate(end))
             result.append(interval)
         }
 

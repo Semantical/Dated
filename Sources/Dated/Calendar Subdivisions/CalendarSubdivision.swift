@@ -1,6 +1,6 @@
 //
 //  CalendarSubdivision.swift
-//  SemanticalKit
+//  Dated
 //
 //  Created by Jürgen on 20.05.23.
 //
