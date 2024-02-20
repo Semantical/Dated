@@ -164,6 +164,12 @@ public struct Day: CalendarSubdivision {
     public var isInWeekend: Bool {
         CalendarDate.calendar.isDateInWeekend(firstInstance)
     }
+    
+    /// Returns a Boolean value indicating whether the receiver is
+    /// within a week period.
+    public var isInWeek: Bool {
+        CalendarDate.calendar.isDate(firstInstance, equalTo: .now, toGranularity: .weekOfYear)
+    }
 }
 
 extension Day: CustomDebugStringConvertible {
