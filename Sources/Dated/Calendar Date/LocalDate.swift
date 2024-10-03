@@ -94,29 +94,30 @@ extension LocalDate: Codable {
 // Comparable Conformance
 
 extension LocalDate: Comparable {
-    private static var _calendar = Calendar(identifier: .gregorian)
-    private static var _gmtCalendar: Calendar? = nil
-
     private var _dateComponents: DateComponents {
-        if LocalDate._calendar.timeZone != timeZone {
-            LocalDate._calendar.timeZone = timeZone
-        }
-        return LocalDate._calendar.dateComponents([.nanosecond, .second, .minute, .hour, .day, .month, .year, .era], from: date)
+        Calendar(gregorianWithTimeZone: timeZone)
+            .dateComponents(
+                [.nanosecond, .second, .minute, .hour, .day, .month, .year, .era],
+                from: date
+            )
     }
-
+    
     private var _date: Date {
-        if LocalDate._gmtCalendar == nil {
-            LocalDate._gmtCalendar = Calendar(identifier: .gregorian)
-            LocalDate._gmtCalendar?.timeZone = TimeZone.gmt
-        }
-        return LocalDate._gmtCalendar!.date(from: _dateComponents)!
+        Calendar(gregorianWithTimeZone: .gmt)
+            .date(from: _dateComponents)!
     }
-
+    
     public static func == (lhs: LocalDate, rhs: LocalDate) -> Bool {
-        return lhs._dateComponents == rhs._dateComponents
+        lhs._dateComponents == rhs._dateComponents
     }
 
     public static func < (lhs: LocalDate, rhs: LocalDate) -> Bool {
-        return lhs._date < rhs._date
+        lhs._date < rhs._date
+    }
+}
+private extension Calendar {
+    init(gregorianWithTimeZone timeZone: TimeZone) {
+        self.init(identifier: .gregorian)
+        self.timeZone = timeZone
     }
 }
