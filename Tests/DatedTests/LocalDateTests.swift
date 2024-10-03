@@ -38,4 +38,10 @@ final class LocalDateTests: XCTestCase {
 
         }
     }
+    
+    func testComparable() throws {
+        let earlierButSeemsLater = LocalDate(date: Date(timeIntervalSinceReferenceDate: 0), timeZone: .init(secondsFromGMT: 7200)!)
+        let laterButSeemsEarlier = LocalDate(date: Date(timeIntervalSinceReferenceDate: 3600), timeZone: .init(secondsFromGMT: 0)!)
+        XCTAssertLessThan(laterButSeemsEarlier, earlierButSeemsLater)
+    }
 }
