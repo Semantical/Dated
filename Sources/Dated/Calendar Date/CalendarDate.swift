@@ -255,7 +255,7 @@ public struct CalendarDate: Hashable, Sendable {
 
     // We make the current calendar testable by going through a static
     // variable that can be changed during testing.
-    static var calendar = Calendar.current
+    nonisolated(unsafe) static var calendar = Calendar.current
 }
 
 

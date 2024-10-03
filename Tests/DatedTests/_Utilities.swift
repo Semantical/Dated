@@ -73,7 +73,7 @@ extension Calendar {
     // Gregorian and Republic of China calendar.
 
     // All Apple supported calendars except .chinese and .islamic.
-    static var testCalendars: [Calendar] = [.gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura, .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601, .japanese].map({ Calendar(identifier: $0) })
+    nonisolated(unsafe) static var testCalendars: [Calendar] = [.gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura, .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601, .japanese].map({ Calendar(identifier: $0) })
 
     func dateWithComponents(
         _ components: Set<Calendar.Component>, from date: Date
