@@ -65,7 +65,7 @@ extension CalendarSubdivision {
     /// Returns a calendar subdivision offset by subtracting components from a
     /// given calendar subdivision.
     public static func - (lhs: Self, rhs: CalendarDate.Components) -> Self {
-        .init((lhs.start + rhs.negated()).date)
+        .init((lhs.start + rhs.negated).date)
     }
     
     /// Adds the given components to a calendar subdivision.

@@ -207,7 +207,7 @@ public struct CalendarDate: Hashable, Sendable {
             DateComponents(era: eras, year: years, month: months, day: days, weekOfYear: weeks)
         }
         
-        func negated() -> Self {
+        var negated: Self {
             .init(
                 eras: negate(eras),
                 years: negate(years),
@@ -232,7 +232,7 @@ public struct CalendarDate: Hashable, Sendable {
     /// Returns a calendar date offset by subtracting components from a
     /// given calendar date.
     public static func - (lhs: CalendarDate, rhs: Components) -> CalendarDate {
-        .init(CalendarDate.calendar.date(byAdding: rhs.negated().nativeComponents, to: lhs.date)!)
+        .init(CalendarDate.calendar.date(byAdding: rhs.negated.nativeComponents, to: lhs.date)!)
     }
     
     /// Adds the given components to a calendar date.
@@ -255,8 +255,7 @@ public struct CalendarDate: Hashable, Sendable {
     
     // MARK: - Current Calendar
     
-    // We make the current calendar testable by going through a static
-    // variable that can be changed during testing.
+    /// Only for testing purposes, to make the current calendar testable.
     nonisolated(unsafe) static var calendar = Calendar.current
 }
 
@@ -303,10 +302,9 @@ extension CalendarDate: CustomDebugStringConvertible {
 
 // MARK: - Bitmasks
 
-// Number of bits each calendar subdivision is represented with.
-
 // swift-format-ignore
 enum Bits {
+    // Number of bits each calendar subdivision is represented with.
     static let dLSTBits   = 1
     static let secondBits = 6 // 0...59
     static let minuteBits = 6 // 0...59
@@ -321,9 +319,7 @@ enum Bits {
     static let yearBits  = 20 // 0..<1_048_576 (> 7515, Ethiopic Amete Alem)
     static let eraBits   = 16 // 0..<65_536 (>  236, Japanese)
 
-
     // The offset at which a calendar subdivision appears in the bit pattern.
-
     static let dLSTOffset   = 0
     static let secondOffset = dLSTOffset   + dLSTBits
     static let minuteOffset = secondOffset + secondBits
@@ -336,7 +332,6 @@ enum Bits {
     // Our types use either (days, months) or weeks, so they can share the same
     // place in the bit pattern:
     static let weekOffset   = dayOffset
-
 
     // A mask starting at the lowest significant bit with a given length.
     static func mask(_ bits: Int) -> Int { (1 << bits) - 1 }

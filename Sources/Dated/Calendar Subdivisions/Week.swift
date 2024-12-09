@@ -35,9 +35,9 @@ public struct Week: CalendarSubdivision {
             [.weekOfYear, .yearForWeekOfYear, .era], from: date
         )
 
-        let week   = (components.weekOfYear        ?? 0) << Bits.weekOffset
-        let year   = (components.yearForWeekOfYear ?? 0) << Bits.yearOffset
-        let era    = (components.era               ?? 0) << Bits.eraOffset
+        let week = (components.weekOfYear        ?? 0) << Bits.weekOffset
+        let year = (components.yearForWeekOfYear ?? 0) << Bits.yearOffset
+        let era  = (components.era               ?? 0) << Bits.eraOffset
 
         id = week + year + era
     }

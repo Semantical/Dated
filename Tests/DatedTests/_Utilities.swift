@@ -4,7 +4,7 @@
 import Foundation
 @testable import Dated
 
-// Dates
+// MARK: - Dates
 
 extension CalendarDate {
     static var firstOfJune2023: CalendarDate {
@@ -24,7 +24,7 @@ extension Date {
     }
 }
 
-// Time Zones
+// MARK: - Time Zones
 
 extension TimeZone {
     static func withRandom(_ count: Int, body: (TimeZone) -> Void) {
@@ -35,7 +35,7 @@ extension TimeZone {
     }
 }
 
-// Calendars
+// MARK: - Calendars
 
 enum TestCalendarID {
     case us
@@ -71,14 +71,13 @@ extension Calendar {
         .gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura,
         .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601,
         .japanese,
-    ].map({ Calendar(identifier: $0) })
+    ]
+    .map { Calendar(identifier: $0) }
 
     func dateWithComponents(
         _ components: Set<Calendar.Component>,
         from date: Date
     ) -> Date {
-        self.date(
-            from: dateComponents(components, from: date)
-        )!
+        self.date(from: dateComponents(components, from: date))!
     }
 }

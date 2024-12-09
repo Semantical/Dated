@@ -36,9 +36,9 @@ public struct Month: CalendarSubdivision {
             [.month, .year, .era], from: date
         )
 
-        let month  = (components.month ?? 0) << Bits.monthOffset
-        let year   = (components.year  ?? 0) << Bits.yearOffset
-        let era    = (components.era   ?? 0) << Bits.eraOffset
+        let month = (components.month ?? 0) << Bits.monthOffset
+        let year  = (components.year  ?? 0) << Bits.yearOffset
+        let era   = (components.era   ?? 0) << Bits.eraOffset
 
         id = month + year + era
     }
