@@ -5,7 +5,8 @@ import Foundation
 
 /// A type that represents a calendar subdivision like day, week, month,
 /// or year.
-public protocol CalendarSubdivision: Hashable, Sendable, Codable, Comparable, Strideable
+public protocol CalendarSubdivision:
+    Sendable, Hashable, Comparable, Strideable, Codable, RawRepresentable
 where Stride == Int {
     
     /// The calendrical unit of the given calendar subdivision.
@@ -111,6 +112,17 @@ extension CalendarSubdivision {
                 to: other.components.calendarComponents
             )
             .value(for: Self.unit.calendarComponent)!
+    }
+}
+
+// Conform to RawRepresentable
+extension CalendarSubdivision {
+    public init?(rawValue: Int) {
+        self.init(id: rawValue)
+    }
+    
+    public var rawValue: Int {
+        id
     }
 }
 
