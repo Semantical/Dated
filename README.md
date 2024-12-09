@@ -9,7 +9,10 @@ Welcome to **Dated**, a Swift framework designed to help you work with dates in 
 - **`Day`, `Week`, `Month`, `Year`**: Types for days, weeks, months, and years that conform to the `CalendarSubdivision` protocol, making it easy to perform calculations and iterate over ranges.
 - **`CalendarDateInterval`**: A type for representing the span of time between a specific start date and end date.
 
-`CalendarDate` and its subdivisions are wall-calendar-based, meaning that they are not affected by time zone changes. This makes them ideal for modeling dates and times in a way that aligns with a user's mental model. Another benefit is that this family of types can be persisted using a simple, ordered integer representation. However, they should only be used in caches. Use `LocalDate` in your source of truth. It is essential to invalidate cached `CalendarDate`s or `CalendarSubdivision`s (Day/Week/etc.) if a user changes their preferred calendar.
+`CalendarDate` and its subdivisions are wall-calendar-based, meaning that they are not affected by time zone changes. This makes them ideal for modeling dates and times in a way that aligns with a user's mental model. Another benefit is that this family of types can be persisted using a simple, ordered integer representation. However, they should only be used in caches.
+
+> [!important]
+> Use `LocalDate` in your source of truth. It is essential to invalidate cached `CalendarDate` or `CalendarSubdivision` (Day/Week/etc.) values if a user changes their preferred calendar.
 
 ## Installation
 
@@ -19,7 +22,8 @@ Add the following dependency to your `Package.swift` file:
 .package(url: "https://github.com/semantical/Dated.git", from: "0.0.1")
 ```
 
-> Warning: This package is in beta and breaking changes may occur in patch releases.
+> [!WARNING]
+> This package is in beta and breaking changes may occur in patch releases.
 
 ## Usage
 
