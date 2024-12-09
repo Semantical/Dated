@@ -54,16 +54,14 @@ public struct LocalDate: Hashable, Sendable {
     // MARK: - Getting Temporal Boundaries
     
     /// A local date in the distant future.
-    public static let distantFuture = LocalDate(
-        date: .distantFuture,
-        timeZone: .gmt
-    )
+    public static var distantFuture: LocalDate {
+        .init(date: .distantFuture, timeZone: .gmt)
+    }
     
     /// A local date in the distant past.
-    public static let distantPast = LocalDate(
-        date: .distantPast,
-        timeZone: .gmt
-    )
+    public static var distantPast: LocalDate {
+        .init(date: .distantPast, timeZone: .gmt)
+    }
 }
 
 // MARK: -

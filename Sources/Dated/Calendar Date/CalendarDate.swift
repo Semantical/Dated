@@ -248,10 +248,14 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Getting Temporal Boundaries
     
     /// A calendar date in the distant future.
-    public static let distantFuture = CalendarDate(Date.distantFuture)
+    public static var distantFuture: CalendarDate {
+        .init(Date.distantFuture)
+    }
     
     /// A local calendar in the distant past.
-    public static let distantPast = CalendarDate(Date.distantPast)
+    public static var distantPast: CalendarDate {
+        .init(Date.distantPast)
+    }
     
     // MARK: - Current Calendar
     
