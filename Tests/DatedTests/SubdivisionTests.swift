@@ -1,33 +1,38 @@
 // Copyright (c) 2024 Semantical GmbH & Co. KG
 // Licensed under the MIT License. See LICENSE file.
 
-import XCTest
+import Testing
+import Foundation
 @testable import Dated
 
-final class SubdivisionTests: XCTestCase {
-    func testWeekdays() throws {
-        for calendar in Calendar.testCalendars {
-            CalendarDate.calendar = calendar
-            XCTAssertEqual(
-                Week.current.days.map(\.dayOfWeek),
-                [1, 2, 3, 4, 5, 6, 7]
-            )
-        }
+@Test(arguments: Calendar.testCalendars)
+func weekdays(with calendar: Calendar) throws {
+    CalendarDate.$calendar.withValue(calendar) {
+        #expect(Week.current.days.map(\.dayOfWeek) == [1, 2, 3, 4, 5, 6, 7])
+    }
+}
+
+@Test
+func firstWeekday() throws {
+    // We look at the US and DE calendar as they have different first
+    // weekdays. The first of June 2023 fell on a Thursday, but should
+    // have different dayOfWeek numbers in either calendar.
+    
+    var calendarUS = Calendar(identifier: .gregorian)
+    calendarUS.locale = Locale(identifier: "en_US")
+    calendarUS.firstWeekday = 1
+    CalendarDate.$calendar.withValue(calendarUS) {
+        let dayUS = CalendarDate.firstOfJune2023.day
+        #expect(dayUS.shortWeekdaySymbol == "Thu")
+        #expect(dayUS.dayOfWeek == 5)
     }
     
-    func testFirstWeekday() throws {
-        // We look at the US and DE calendar as they have different first
-        // weekdays. The first of June 2023 fell on a Thursday, but should
-        // have different dayOfWeek numbers in either calendar.
-        
-        CalendarDate.setCurrentCalendar(to: .us)
-        let dayUS = CalendarDate.firstOfJune2023.day
-        XCTAssertEqual(dayUS.shortWeekdaySymbol, "Thu")
-        XCTAssertEqual(dayUS.dayOfWeek, 5)
-        
-        CalendarDate.setCurrentCalendar(to: .de)
+    var calendarDE = Calendar(identifier: .gregorian)
+    calendarDE.locale = Locale(identifier: "de_DE")
+    calendarDE.firstWeekday = 2
+    CalendarDate.$calendar.withValue(calendarDE) {
         let dayDE = CalendarDate.firstOfJune2023.day
-        XCTAssertEqual(dayDE.shortWeekdaySymbol, "Do")
-        XCTAssertEqual(dayDE.dayOfWeek, 4)
+        #expect(dayDE.shortWeekdaySymbol == "Do")
+        #expect(dayDE.dayOfWeek == 4)
     }
 }

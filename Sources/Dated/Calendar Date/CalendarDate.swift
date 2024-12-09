@@ -256,7 +256,8 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Current Calendar
     
     /// Only for testing purposes, to make the current calendar testable.
-    nonisolated(unsafe) static var calendar = Calendar.current
+    @TaskLocal
+    package static var calendar = Calendar.current
 }
 
 // MARK: - Conformances

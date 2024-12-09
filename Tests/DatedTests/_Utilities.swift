@@ -37,26 +37,6 @@ extension TimeZone {
 
 // MARK: - Calendars
 
-enum TestCalendarID {
-    case us
-    case de
-}
-
-extension CalendarDate {
-    static func setCurrentCalendar(to id: TestCalendarID) {
-        switch id {
-        case .us:
-            calendar = Calendar(identifier: .gregorian)
-            calendar.locale = Locale(identifier: "en_US")
-            calendar.firstWeekday = 1
-        case .de:
-            calendar = Calendar(identifier: .gregorian)
-            calendar.locale = Locale(identifier: "de_DE")
-            calendar.firstWeekday = 2
-        }
-    }
-}
-
 extension Calendar {
     // Our approach does not work for the Chinese (.chinese) and
     // Islamic (.islamic) calendars. Apple's implementation of the Islamic
@@ -67,13 +47,15 @@ extension Calendar {
     // Gregorian and Republic of China calendar.
     
     // All Apple supported calendars except .chinese and .islamic.
-    nonisolated(unsafe) static var testCalendars: [Calendar] = [
-        .gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura,
-        .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601,
-        .japanese,
-    ]
-    .map { Calendar(identifier: $0) }
-
+    static var testCalendars: [Calendar] {
+        [
+            .gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular,
+            .islamicUmmAlQura, .buddhist, .persian, .hebrew, .ethiopicAmeteAlem,
+            .ethiopicAmeteMihret, .coptic, .iso8601, .japanese,
+        ]
+        .map { Calendar(identifier: $0) }
+    }
+    
     func dateWithComponents(
         _ components: Set<Calendar.Component>,
         from date: Date
