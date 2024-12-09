@@ -1,0 +1,24 @@
+{
+  "indentation": {
+    "spaces": 4
+  },
+  "indentBlankLines": true,
+  "lineBreakBetweenDeclarationAttributes": true,
+  "lineBreakAroundMultilineExpressionChainComponents": false,
+  "lineBreakBeforeControlFlowKeywords": false,
+  "lineBreakBeforeEachArgument": true,
+  "lineBreakBeforeEachGenericRequirement": true,
+  "lineLength": 100,
+  "maximumBlankLines": 1,
+  "prioritizeKeepingFunctionOutputTogether": true,
+  "rules": {
+    "AlwaysUseLiteralForEmptyCollectionInit": true,
+    "IdentifiersMustBeASCII": false,
+    "OmitExplicitReturns": true,
+    "UseEarlyExits": true,
+    "ValidateDocumentationComments": true
+  },
+  "spacesAroundRangeFormationOperators": false,
+  "tabWidth": 4,
+  "version": 1
+}
