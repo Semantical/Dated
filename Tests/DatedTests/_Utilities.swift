@@ -18,16 +18,15 @@ extension CalendarDate {
 
 extension Date {
     static func random() -> Date {
-        Date(timeIntervalSinceReferenceDate: Double.random(in: 0 ... 20*365*24*60*60))
+        Date(timeIntervalSinceReferenceDate: Double.random(in: 0...20 * 365 * 24 * 60 * 60))
     }
-
+    
     static func withRandom(_ count: Int, body: (Date) throws -> Void) rethrows {
         for _ in 0..<count {
             try body(Date.random())
         }
     }
 }
-
 
 // Time Zones
 
@@ -39,7 +38,6 @@ extension TimeZone {
         }
     }
 }
-
 
 // Calendars
 
@@ -71,14 +69,20 @@ extension Calendar {
     // I haven't looked into the Chinese calendar as it isn't even used in
     // China anymore. China and the Chinese language community abroad uses the
     // Gregorian and Republic of China calendar.
-
+    
     // All Apple supported calendars except .chinese and .islamic.
-    nonisolated(unsafe) static var testCalendars: [Calendar] = [.gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura, .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601, .japanese].map({ Calendar(identifier: $0) })
+    nonisolated(unsafe) static var testCalendars: [Calendar] = [
+        .gregorian, .republicOfChina, .indian, .islamicCivil, .islamicTabular, .islamicUmmAlQura,
+        .buddhist, .persian, .hebrew, .ethiopicAmeteAlem, .ethiopicAmeteMihret, .coptic, .iso8601,
+        .japanese,
+    ].map({ Calendar(identifier: $0) })
 
     func dateWithComponents(
-        _ components: Set<Calendar.Component>, from date: Date
+        _ components: Set<Calendar.Component>,
+        from date: Date
     ) -> Date {
-        self.date(from: dateComponents(components, from: date)
+        self.date(
+            from: dateComponents(components, from: date)
         )!
     }
 }

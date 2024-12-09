@@ -16,32 +16,31 @@ public struct LocalDate: Hashable, Sendable {
     public init() {
         self = .now
     }
-
+    
     /// Creates a new local date using the current time zone.
     public init(_ date: CalendarDate) {
         self.init(date: date.date, timeZone: CalendarDate.calendar.timeZone)
     }
-
+    
     /// Creates a new local date using the current time zone.
     public init(_ date: Date) {
         self.init(date: date, timeZone: CalendarDate.calendar.timeZone)
     }
-
+    
     /// Returns the current date in the current time zone at the
     /// moment of access.
     public static var now: LocalDate {
         .init(Date.now)
     }
-
+    
     init(date: Date, timeZone: TimeZone) {
         self.date = date
-
+        
         self.timeZone = TimeZone(secondsFromGMT: timeZone.secondsFromGMT(for: date))!
     }
-
-
+    
     // MARK: - Getting Calendar Dates
-
+    
     /// Returns a calendar date preserving the hour of day from the original
     /// time zone.
     public var calendarDate: CalendarDate {
@@ -49,25 +48,28 @@ public struct LocalDate: Hashable, Sendable {
         if timeZone != CalendarDate.calendar.timeZone {
             calendar.timeZone = timeZone
         }
-        return CalendarDate(components: calendar.dateComponents(
-            [.minute, .hour, .day, .month, .year, .era], from: date
-        ))
+        return CalendarDate(
+            components: calendar.dateComponents(
+                [.minute, .hour, .day, .month, .year, .era],
+                from: date
+            )
+        )
     }
-
-
+    
     // MARK: - Getting Temporal Boundaries
-
+    
     /// A local date in the distant future.
     public static let distantFuture = LocalDate(
-        date: .distantFuture, timeZone: .gmt
+        date: .distantFuture,
+        timeZone: .gmt
     )
-
+    
     /// A local date in the distant past.
     public static let distantPast = LocalDate(
-        date: .distantPast, timeZone: .gmt
+        date: .distantPast,
+        timeZone: .gmt
     )
 }
-
 
 // MARK: -
 
@@ -76,14 +78,14 @@ public struct LocalDate: Hashable, Sendable {
 extension LocalDate: Codable {
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
-
+        
         let secondsSince1970 = try container.decode(Double.self)
         date = Date(timeIntervalSince1970: secondsSince1970)
-
+        
         let secondsFromGMT = try container.decode(Int.self)
         timeZone = TimeZone(secondsFromGMT: secondsFromGMT)!
     }
-
+    
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(date.timeIntervalSince1970)
@@ -110,7 +112,7 @@ extension LocalDate: Comparable {
     public static func == (lhs: LocalDate, rhs: LocalDate) -> Bool {
         lhs._dateComponents == rhs._dateComponents
     }
-
+    
     public static func < (lhs: LocalDate, rhs: LocalDate) -> Bool {
         lhs._date < rhs._date
     }
