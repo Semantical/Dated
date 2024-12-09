@@ -1,9 +1,5 @@
-//
-//  _Utilities.swift
-//  Dated
-//
-//  Created by Jürgen on 03.06.23.
-//
+// Copyright (c) 2024 Semantical GmbH & Co. KG
+// Licensed under the MIT License. See LICENSE file.
 
 import Foundation
 @testable import Dated

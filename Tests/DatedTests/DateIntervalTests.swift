@@ -1,9 +1,5 @@
-//
-//  DateIntervalTests.swift
-//  Dated
-//
-//  Created by Jürgen on 02.06.23.
-//
+// Copyright (c) 2024 Semantical GmbH & Co. KG
+// Licensed under the MIT License. See LICENSE file.
 
 import XCTest
 import Dated
