@@ -2,7 +2,6 @@
 
 Learn about the relationships between calendar date, local date, and how to represent calendrical concepts.
 
-
 ## Creating calendar dates
 
 Create a ``LocalDate`` value to capture the current time zone automatically. Before using it in view models, convert the local calendar date to a ``CalendarDate`` value. You can create a calendar date directly from a system date. However, bear in mind that a calendar date is only valid until the user changes their preferred calendar.
@@ -61,5 +60,4 @@ for day in today ..< today + .days(10) {
 
 // The same day next year.
 let sameDayNextYear = today + .years(1)
-
 ```
