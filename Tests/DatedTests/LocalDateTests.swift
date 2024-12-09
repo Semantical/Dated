@@ -3,7 +3,7 @@
 
 import Testing
 import Foundation
-@testable import Dated
+import Dated
 
 @Test
 func timeZones() throws {

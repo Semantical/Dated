@@ -5,8 +5,8 @@ import Foundation
 
 /// A date preserving the original time zone at the moment it was created.
 public struct LocalDate: Hashable, Sendable {
-    let date: Date
-    let timeZone: TimeZone
+    public var date: Date
+    public var timeZone: TimeZone
     
     /// Creates a new local date from the current date at the moment of access.
     public init() {
@@ -29,9 +29,8 @@ public struct LocalDate: Hashable, Sendable {
         .init(Date.now)
     }
     
-    init(date: Date, timeZone: TimeZone) {
+    public init(date: Date, timeZone: TimeZone) {
         self.date = date
-        
         self.timeZone = TimeZone(secondsFromGMT: timeZone.secondsFromGMT(for: date))!
     }
     

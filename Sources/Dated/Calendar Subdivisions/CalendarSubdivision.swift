@@ -106,11 +106,11 @@ extension CalendarSubdivision {
     public func distance(to other: Self) -> Int {
         CalendarDate.calendar
             .dateComponents(
-                [Self.unit.nativeComponent],
-                from: components.nativeComponents,
-                to: other.components.nativeComponents
+                [Self.unit.calendarComponent],
+                from: components.calendarComponents,
+                to: other.components.calendarComponents
             )
-            .value(for: Self.unit.nativeComponent)!
+            .value(for: Self.unit.calendarComponent)!
     }
 }
 

@@ -3,7 +3,7 @@
 
 import Testing
 import Foundation
-@testable import Dated
+import Dated
 
 @Test(arguments: Calendar.testCalendars)
 func weekdays(with calendar: Calendar) throws {

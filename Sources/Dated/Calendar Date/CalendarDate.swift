@@ -155,7 +155,7 @@ public struct CalendarDate: Hashable, Sendable {
     public enum Unit {
         case era, year, month, week, day
         
-        var nativeComponent: Calendar.Component {
+        public var calendarComponent: Calendar.Component {
             switch self {
             case .era: .era
             case .year: .year
@@ -203,7 +203,7 @@ public struct CalendarDate: Hashable, Sendable {
             }
         }
         
-        var nativeComponents: DateComponents {
+        public var calendarComponents: DateComponents {
             DateComponents(era: eras, year: years, month: months, day: days, weekOfYear: weeks)
         }
         
@@ -226,13 +226,13 @@ public struct CalendarDate: Hashable, Sendable {
     /// Returns a calendar date offset by adding components to a given
     /// calendar date.
     public static func + (lhs: CalendarDate, rhs: Components) -> CalendarDate {
-        .init(CalendarDate.calendar.date(byAdding: rhs.nativeComponents, to: lhs.date)!)
+        .init(CalendarDate.calendar.date(byAdding: rhs.calendarComponents, to: lhs.date)!)
     }
     
     /// Returns a calendar date offset by subtracting components from a
     /// given calendar date.
     public static func - (lhs: CalendarDate, rhs: Components) -> CalendarDate {
-        .init(CalendarDate.calendar.date(byAdding: rhs.negated.nativeComponents, to: lhs.date)!)
+        .init(CalendarDate.calendar.date(byAdding: rhs.negated.calendarComponents, to: lhs.date)!)
     }
     
     /// Adds the given components to a calendar date.

@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE file.
 
 import Testing
-@testable import Dated
+import Dated
 import Foundation
 
 @Test(arguments: Calendar.testCalendars)
@@ -123,7 +123,7 @@ extension CalendarDate {
             from: date
         )
         let endDate = calendar.date(
-            byAdding: unit.nativeComponent,
+            byAdding: unit.calendarComponent,
             value: 1,
             to: startDate
         )

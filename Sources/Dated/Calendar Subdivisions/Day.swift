@@ -90,7 +90,7 @@ public struct Day: CalendarSubdivision {
     // MARK: - Related Dates
     
     private var firstInstance: Date {
-        CalendarDate.calendar.date(from: components.nativeComponents)!
+        CalendarDate.calendar.date(from: components.calendarComponents)!
     }
     
     /// The first moment of this day.

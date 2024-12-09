@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE file.
 
 import Foundation
-@testable import Dated
+import Dated
 
 // MARK: - Dates
 
