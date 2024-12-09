@@ -6,10 +6,10 @@ import Foundation
 /// The span of time between a specific start date and end date.
 public struct CalendarDateInterval: Hashable, Sendable {
     /// The start date.
-    public let start: CalendarDate
+    public var start: CalendarDate
     
     /// The duration.
-    public let duration: TimeDifference
+    public var duration: TimeDifference
     
     /// Initializes a date interval with start and end dates set to the
     /// current date and the duration set to 0.
