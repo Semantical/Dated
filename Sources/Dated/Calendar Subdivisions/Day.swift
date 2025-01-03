@@ -50,8 +50,14 @@ public struct Day: CalendarSubdivision {
         (id & Bits.dayMask) >> Bits.dayOffset
     }
     
-    private var nativeWeekday: Int {
+    /// The day of the week, represented by a number from 1 to 7 (where Sunday is always 1).
+    public var nativeWeekday: Int {
         CalendarDate.calendar.component(.weekday, from: firstInstance)
+    }
+    
+    /// The weekday ordinal for the weekday in the month.
+    public var weekdayOrdinal: Int {
+        CalendarDate.calendar.component(.weekdayOrdinal, from: firstInstance)
     }
     
     /// The day of the week, represented by a number from 1 to 7.
