@@ -51,7 +51,7 @@ public struct Day: CalendarSubdivision {
     }
     
     /// The day of the week, represented by a number from 1 to 7 (where Sunday is always 1).
-    public var nativeWeekday: Int {
+    private var nativeWeekday: Int {
         CalendarDate.calendar.component(.weekday, from: firstInstance)
     }
     
