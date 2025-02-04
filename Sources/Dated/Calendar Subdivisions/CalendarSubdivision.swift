@@ -105,11 +105,15 @@ extension CalendarSubdivision {
     }
     
     public func distance(to other: Self) -> Int {
+        // Using the variation of `dateComponents(_:from:to:)`
+        // that accepts the CalendarSubdivision `DateComponents`
+        // as arguments always returns 0 for some reason,
+        // so we just use the `Date` variation here.
         CalendarDate.calendar
             .dateComponents(
                 [Self.unit.calendarComponent],
-                from: components.calendarComponents,
-                to: other.components.calendarComponents
+                from: start.date,
+                to: other.start.date
             )
             .value(for: Self.unit.calendarComponent)!
     }
