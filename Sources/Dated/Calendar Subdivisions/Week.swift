@@ -61,7 +61,7 @@ public struct Week: CalendarSubdivision {
     
     /// All date components of the given week.
     public var components: CalendarDate.Components {
-        CalendarDate.Components(eras: era, years: yearOfEra, months: weekOfYear)
+        CalendarDate.Components(eras: era, years: yearOfEra, weeks: weekOfYear)
     }
     
     // MARK: - Related Dates
