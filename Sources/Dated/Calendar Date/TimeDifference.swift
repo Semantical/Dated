@@ -7,10 +7,13 @@ import Foundation
 ///
 /// On its own, a time difference does not specify a span between specific
 /// dates. Combining a time difference with a calendar date yields a CalendarDateInterval value.
-public struct TimeDifference: Hashable, Sendable {
+public struct TimeDifference: Hashable, Sendable, RawRepresentable {
+   
     public var seconds: Int
     
     public var minutes: Int { seconds / 60 }
+    
+    public var rawValue: Int { seconds }
     
     /// Creates a time difference of 0 seconds.
     public init() {
@@ -20,6 +23,10 @@ public struct TimeDifference: Hashable, Sendable {
     /// Creates a time difference based on the given number of minutes.
     public init(seconds: Int) {
         self.seconds = seconds
+    }
+    
+    public init?(rawValue: Int) {
+        self.seconds = rawValue
     }
     
     public static func seconds(_ value: Int) -> TimeDifference {

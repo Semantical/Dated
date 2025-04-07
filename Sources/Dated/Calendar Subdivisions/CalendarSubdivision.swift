@@ -130,6 +130,13 @@ extension CalendarSubdivision {
     }
 }
 
+// Conform to Equatable
+extension CalendarSubdivision {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
 extension CalendarSubdivision {
     static func subdivisions(
         of smaller: Calendar.Component,
