@@ -23,15 +23,36 @@ func components(with calendar: Calendar) throws {
         Date.withRandom(50) { date in
             let calendarDate = CalendarDate(date)
             let components = calendar.dateComponents(
-                [.minute, .hour, .day, .month, .year],
+                [.second, .minute, .hour, .day, .month, .year],
                 from: date
             )
+            #expect(calendarDate.secondOfHour == components.second!)
             #expect(calendarDate.minuteOfHour == components.minute!)
             #expect(calendarDate.hourOfDay == components.hour!)
             #expect(calendarDate.dayOfMonth == components.day!)
             #expect(calendarDate.monthOfYear == components.month!)
             #expect(calendarDate.yearOfEra == components.year!)
         }
+    }
+}
+
+@Test(arguments: Calendar.testCalendars)
+func calendarDateArithmetic(with calendar: Calendar) throws {
+    CalendarDate.$calendar.withValue(calendar) {
+        Date.withRandom(50) { date in
+            let calendarDate = CalendarDate(date)
+            #expect(calendarDate + .seconds(10) == CalendarDate(date.addingTimeInterval(10)))
+            #expect(calendarDate + .hours(10) == CalendarDate(date.addingTimeInterval(3600 * 10)))
+            #expect(calendarDate + .days(10) == _date(adding: .init(day: 10), to: date))
+            #expect(calendarDate + .weeks(10) == _date(adding: .init(weekOfYear: 10), to: date))
+            #expect(calendarDate + .months(10) == _date(adding: .init(month: 10), to: date))
+            #expect(calendarDate + .years(10) == _date(adding: .init(year: 10), to: date))
+            #expect(calendarDate + .eras(10) == _date(adding: .init(era: 10), to: date))
+        }
+    }
+    
+    func _date(adding components: DateComponents, to date: Date) -> CalendarDate {
+        CalendarDate(calendar.date(byAdding: components, to: date) ?? date)
     }
 }
 

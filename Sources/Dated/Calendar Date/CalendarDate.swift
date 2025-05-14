@@ -108,8 +108,8 @@ public struct CalendarDate: Hashable, Sendable {
         case .month: month
         case .week: week
         case .day: day
-        case .era:
-            fatalError("CalendarDate does not support era subdivisions.")
+        case .second, .minute, .hour, .era:
+            fatalError("CalendarDate does not support \(unit) subdivisions.")
         }
     }
     
@@ -153,7 +153,7 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Adding and Subtracting Components
     
     public enum Unit {
-        case era, year, month, week, day
+        case era, year, month, week, day, hour, minute, second
         
         public var calendarComponent: Calendar.Component {
             switch self {
@@ -162,29 +162,41 @@ public struct CalendarDate: Hashable, Sendable {
             case .month: .month
             case .week: .weekOfYear
             case .day: .day
+            case .hour: .hour
+            case .minute: .minute
+            case .second: .second
             }
         }
     }
     
     public struct Components {
-        public let eras: Int?
-        public let years: Int?
-        public let months: Int?
-        public let weeks: Int?
-        public let days: Int?
+        public var eras: Int?
+        public var years: Int?
+        public var months: Int?
+        public var weeks: Int?
+        public var days: Int?
+        public var hours: Int?
+        public var minutes: Int?
+        public var seconds: Int?
         
         public init(
             eras: Int? = nil,
             years: Int? = nil,
             months: Int? = nil,
             weeks: Int? = nil,
-            days: Int? = nil
+            days: Int? = nil,
+            hours: Int? = nil,
+            minutes: Int? = nil,
+            seconds: Int? = nil,
         ) {
             self.eras = eras
             self.years = years
             self.months = months
             self.weeks = weeks
             self.days = days
+            self.hours = hours
+            self.minutes = minutes
+            self.seconds = seconds
         }
         
         public static func eras(_ count: Int) -> Self { .init(eras: count) }
@@ -192,6 +204,9 @@ public struct CalendarDate: Hashable, Sendable {
         public static func months(_ count: Int) -> Self { .init(months: count) }
         public static func weeks(_ count: Int) -> Self { .init(weeks: count) }
         public static func days(_ count: Int) -> Self { .init(days: count) }
+        public static func hours(_ count: Int) -> Self { .init(hours: count) }
+        public static func minutes(_ count: Int) -> Self { .init(minutes: count) }
+        public static func seconds(_ count: Int) -> Self { .init(seconds: count) }
         
         public static func count(_ count: Int, of unit: CalendarDate.Unit) -> Self {
             switch unit {
@@ -200,11 +215,23 @@ public struct CalendarDate: Hashable, Sendable {
             case .month: months(count)
             case .week: weeks(count)
             case .day: days(count)
+            case .hour: hours(count)
+            case .minute: minutes(count)
+            case .second: seconds(count)
             }
         }
         
         public var calendarComponents: DateComponents {
-            DateComponents(era: eras, year: years, month: months, day: days, weekOfYear: weeks)
+            DateComponents(
+                era: eras,
+                year: years,
+                month: months,
+                day: days,
+                hour: hours,
+                minute: minutes,
+                second: seconds,
+                weekOfYear: weeks,
+            )
         }
         
         var negated: Self {
