@@ -28,7 +28,7 @@ public struct CalendarDate: Hashable, Sendable {
         self = localDate.calendarDate
     }
     
-    /// Creates a calendar date in the user's preferrend calendar.
+    /// Creates a calendar date in the user's preferred calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.second, .minute, .hour, .day, .month, .year, .era],

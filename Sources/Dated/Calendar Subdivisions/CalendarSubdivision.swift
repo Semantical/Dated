@@ -25,10 +25,10 @@ where Stride == Int {
     /// has been saved previously.
     init(id: Int)
     
-    /// Creates a calendar subdivision in the user's preferrend calendar.
+    /// Creates a calendar subdivision in the user's preferred calendar.
     init(_ date: Date)
     
-    /// Creates a calendar subdivision in the user's preferrend calendar.
+    /// Creates a calendar subdivision in the user's preferred calendar.
     init(_ date: CalendarDate)
     
     /// The first moment of this calendar subdivision.

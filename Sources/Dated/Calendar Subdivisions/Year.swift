@@ -23,13 +23,13 @@ public struct Year: CalendarSubdivision {
         self.id = id & (Bits.eraMask + Bits.yearMask)
     }
     
-    /// Creates a year in the user's preferrend calendar.
+    /// Creates a year in the user's preferred calendar.
     public init(_ date: CalendarDate) {
         self.init(id: date.id)
     }
     
     // swift-format-ignore
-    /// Creates a year in the user's preferrend calendar.
+    /// Creates a year in the user's preferred calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents([.year, .era], from: date)
 
@@ -84,6 +84,19 @@ public struct Year: CalendarSubdivision {
 
 extension Year: CustomDebugStringConvertible {
     public var debugDescription: String {
+        description
+    }
+}
+
+extension Year: LosslessStringConvertible, CustomStringConvertible {
+    public init?(_ description: String) {
+        guard let date = try? Date(description, strategy: .iso8601.year()) else {
+            return nil
+        }
+        self.init(date)
+    }
+    
+    public var description: String {
         "\(yearOfEra)"
     }
 }

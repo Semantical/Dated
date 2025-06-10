@@ -36,3 +36,15 @@ func firstWeekday() throws {
         #expect(dayDE.dayOfWeek == 4)
     }
 }
+
+@Test
+func subdivisionLosslessStringConvertible() async throws {
+    let day = Day(Date.now)
+    #expect(Day(day.description) == day)
+    
+    let month = Month(Date.now)
+    #expect(Month(month.description) == month)
+    
+    let year = Year(Date.now)
+    #expect(Year(year.description) == year)
+}

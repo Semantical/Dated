@@ -23,13 +23,13 @@ public struct Week: CalendarSubdivision {
         self.id = id & (Bits.weekMask + Bits.yearMask + Bits.eraMask)
     }
     
-    /// Creates a week in the user's preferrend calendar.
+    /// Creates a week in the user's preferred calendar.
     public init(_ date: CalendarDate) {
         self.init(date.date)
     }
     
     // swift-format-ignore
-    /// Creates a week in the user's preferrend calendar.
+    /// Creates a week in the user's preferred calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.weekOfYear, .yearForWeekOfYear, .era], from: date

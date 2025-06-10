@@ -24,13 +24,13 @@ public struct Month: CalendarSubdivision {
         self.id = id & (Bits.eraMask + Bits.yearMask + Bits.monthMask)
     }
     
-    /// Creates a month in the user's preferrend calendar.
+    /// Creates a month in the user's preferred calendar.
     public init(_ date: CalendarDate) {
         self.init(id: date.id)
     }
     
     // swift-format-ignore
-    /// Creates a month in the user's preferrend calendar.
+    /// Creates a month in the user's preferred calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.month, .year, .era], from: date
@@ -92,6 +92,19 @@ public struct Month: CalendarSubdivision {
 
 extension Month: CustomDebugStringConvertible {
     public var debugDescription: String {
+        description
+    }
+}
+
+extension Month: LosslessStringConvertible, CustomStringConvertible {
+    public init?(_ description: String) {
+        guard let date = try? Date(description, strategy: .iso8601.year().month()) else {
+            return nil
+        }
+        self.init(date)
+    }
+    
+    public var description: String {
         "\(yearOfEra)-\(monthOfYear)"
     }
 }

@@ -23,13 +23,13 @@ public struct Day: CalendarSubdivision {
         self.id = id & (Bits.eraMask + Bits.yearMask + Bits.monthMask + Bits.dayMask)
     }
     
-    /// Creates a day in the user's preferrend calendar.
+    /// Creates a day in the user's preferred calendar.
     public init(_ date: CalendarDate) {
         self.init(id: date.id)
     }
     
     // swift-format-ignore
-    /// Creates a day in the user's preferrend calendar.
+    /// Creates a day in the user's preferred calendar.
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents(
             [.day, .month, .year, .era], from: date
@@ -43,6 +43,13 @@ public struct Day: CalendarSubdivision {
         id = day + month + year + era
     }
     
+    /// Creates a day from components in the user's preferred calendar.
+    public init?(year: Int, month: Int, day: Int) {
+        let components = DateComponents(year: year, month: month, day: day)
+        guard let date = CalendarDate.calendar.date(from: components) else { return nil }
+        self.init(date)
+    }
+    
     // MARK: - Accessing Calendar Components
     
     /// The day component.
@@ -51,7 +58,7 @@ public struct Day: CalendarSubdivision {
     }
     
     /// The day of the week, represented by a number from 1 to 7 (where Sunday is always 1).
-    private var nativeWeekday: Int {
+    public var nativeWeekday: Int {
         CalendarDate.calendar.component(.weekday, from: firstInstance)
     }
     
@@ -172,6 +179,19 @@ public struct Day: CalendarSubdivision {
 
 extension Day: CustomDebugStringConvertible {
     public var debugDescription: String {
+        description
+    }
+}
+
+extension Day: LosslessStringConvertible, CustomStringConvertible {
+    public init?(_ description: String) {
+        guard let date = try? Date(description, strategy: .iso8601.year().month().day()) else {
+            return nil
+        }
+        self.init(date)
+    }
+    
+    public var description: String {
         "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth)"
     }
 }
