@@ -318,6 +318,18 @@ extension CalendarDate: Codable {
     }
 }
 
+// RawRepresentable Conformance
+
+extension CalendarDate: RawRepresentable {
+    public var rawValue: Int {
+        id
+    }
+    
+    public init?(rawValue: Int) {
+        self.init(id: rawValue)
+    }
+}
+
 // Comparable Conformance
 
 extension CalendarDate: Comparable {
