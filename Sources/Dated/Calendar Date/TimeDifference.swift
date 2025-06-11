@@ -77,3 +77,78 @@ extension TimeDifference: Codable {
         try seconds.encode(to: encoder)
     }
 }
+
+// MARK: - FormatStyle
+
+extension TimeDifference {
+    public var duration: Duration {
+        .seconds(seconds)
+    }
+    
+    public func formatted() -> String {
+        UnitsFormatStyle.units().format(self)
+    }
+    
+    public func formatted<Style>(_ style: Style) -> String
+    where Style: FormatStyle, Style.FormatInput == TimeDifference, Style.FormatOutput == String {
+        style.format(self)
+    }
+    
+    public struct UnitsFormatStyle: FormatStyle {
+        public typealias FormatInput = TimeDifference
+        public typealias FormatOutput = String
+        
+        private var formatStyle: Duration.UnitsFormatStyle
+        
+        public init(
+            allowedUnits: Set<Duration.UnitsFormatStyle.Unit>,
+            width: Duration.UnitsFormatStyle.UnitWidth,
+            maximumUnitCount: Int? = nil,
+            zeroValueUnits: Duration.UnitsFormatStyle.ZeroValueUnitsDisplayStrategy = .hide,
+            valueLength: Int? = nil,
+            fractionalPart: Duration.UnitsFormatStyle.FractionalPartDisplayStrategy = .hide,
+        ) {
+            self.formatStyle = .init(
+                allowedUnits: allowedUnits,
+                width: width,
+                maximumUnitCount: maximumUnitCount,
+                zeroValueUnits: zeroValueUnits,
+                valueLength: valueLength,
+                fractionalPart: fractionalPart,
+            )
+        }
+        
+        public func format(_ value: TimeDifference) -> String {
+            formatStyle.format(value.duration)
+        }
+    }
+}
+
+extension FormatStyle where Self == TimeDifference.UnitsFormatStyle {
+    public static func units(
+        allowed units: Set<Duration.UnitsFormatStyle.Unit> = [.hours, .minutes, .seconds],
+        width: Duration.UnitsFormatStyle.UnitWidth = .abbreviated,
+        maximumUnitCount: Int? = nil,
+        zeroValueUnits: Duration.UnitsFormatStyle.ZeroValueUnitsDisplayStrategy = .hide,
+        valueLength: Int? = nil,
+        fractionalPart: Duration.UnitsFormatStyle.FractionalPartDisplayStrategy = .hide
+    ) -> Self {
+        .init(
+            allowedUnits: units,
+            width: width,
+            maximumUnitCount: maximumUnitCount,
+            zeroValueUnits: zeroValueUnits,
+            valueLength: valueLength,
+            fractionalPart: fractionalPart,
+        )
+    }
+}
+
+#if canImport(Playgrounds)
+import Playgrounds
+
+#Playground("TimeDifference.FormatStyle") {
+    let fiveMin = TimeDifference.seconds(5 * 60).formatted()
+    let twoHr = TimeDifference.seconds(2 * 60 * 60).formatted()
+}
+#endif
