@@ -195,3 +195,110 @@ extension Day: LosslessStringConvertible, CustomStringConvertible {
         "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth)"
     }
 }
+
+// MARK: - FormatStyle
+
+/// A custom FormatStyle that outputs:
+/// - "Yesterday" if the date is yesterday
+/// - "Today" if the date is today
+/// - "Tomorrow" if the date is tomorrow
+/// - the full weekday name if it's within the current week
+/// - "EEE, MMM d" otherwise
+@available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
+extension Day {
+    public func formatted() -> String {
+        FormatStyle().format(self)
+    }
+    
+    public struct FormatStyle: Foundation.FormatStyle {
+        public typealias FormatInput = Day
+        public typealias FormatOutput = String
+        
+        public var capitalizationContext: FormatStyleCapitalizationContext
+        public var locale: Locale
+        
+#if canImport(Darwin)
+        // TODO: figure out Swift-native caching
+        // This is safe according to NSCache docs
+        public static nonisolated(unsafe) let cache = NSCache<NSDate, NSString>()
+#endif
+        
+        public init(
+            capitalizationContext: FormatStyleCapitalizationContext = .beginningOfSentence,
+            locale: Locale = .current,
+        ) {
+            self.capitalizationContext = capitalizationContext
+            self.locale = locale
+        }
+        
+        private var relativeStyle: Date.RelativeFormatStyle {
+            Date.RelativeFormatStyle(
+                allowedFields: [.day],
+                presentation: .named,
+                locale: locale,
+                capitalizationContext: capitalizationContext,
+            )
+        }
+        
+        private var weekdayStyle: Date.FormatStyle {
+            Date.FormatStyle(
+                locale: locale,
+                capitalizationContext: capitalizationContext
+            )
+            .weekday(.wide)
+            .locale(locale)
+        }
+        
+        private var absoluteStyle: Date.FormatStyle {
+            Date.FormatStyle(
+                locale: locale,
+                capitalizationContext: capitalizationContext
+            )
+            .weekday(.abbreviated)
+            .month(.abbreviated)
+            .day()
+        }
+        
+        public func format(_ day: Day) -> String {
+            let date = day.start.date
+            
+#if canImport(Darwin)
+            let key = date as NSDate
+            if let cached = Self.cache.object(forKey: key) {
+                return cached as String
+            }
+#endif
+            
+            let output = if (-1...1).contains(day.distance(to: .current)) {
+                date.formatted(relativeStyle)
+            } else if day.isInThisWeek {
+                date.formatted(weekdayStyle)
+            } else {
+                date.formatted(absoluteStyle)
+            }
+            
+#if canImport(Darwin)
+            Self.cache.setObject(output as NSString, forKey: key)
+#endif
+            
+            return output
+        }
+    }
+}
+
+@available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
+extension FormatStyle where Self == Day.FormatStyle {
+    /// Can be used with Text views like `Text(day, format: .day)`.
+    public static var day: Day.FormatStyle { Day.FormatStyle() }
+}
+
+#if canImport(Playgrounds)
+import Playgrounds
+
+@available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
+#Playground("Day.FormatStyle") {
+    for offset in -8..<9 {
+        let day = Day().advanced(by: offset).formatted()
+    }
+}
+#endif
