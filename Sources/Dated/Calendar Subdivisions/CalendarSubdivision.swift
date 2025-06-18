@@ -113,6 +113,11 @@ extension CalendarSubdivision {
         .init(start + .count(n, of: Self.unit))
     }
     
+    /// The value ordered immediately before self.
+    @inlinable public var previous: Self { advanced(by: -1) }
+    /// The value ordered immediately after self.
+    @inlinable public var next: Self { advanced(by: 1) }
+    
     public func distance(to other: Self) -> Int {
         // Using the variation of `dateComponents(_:from:to:)`
         // that accepts the CalendarSubdivision `DateComponents`
