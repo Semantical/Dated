@@ -13,28 +13,33 @@ public struct CalendarDateInterval: Hashable, Sendable {
     
     /// Initializes a date interval with start and end dates set to the
     /// current date and the duration set to 0.
+    @inlinable
     public init() {
         self.init(start: .now, duration: .seconds(0))
     }
     
     /// Initializes a date interval with the specified start date and duration.
+    @inlinable
     public init(start: CalendarDate, duration: TimeDifference) {
         self.start = start
         self.duration = duration
     }
     
     /// Initializes a date interval with the specified start and end date.
+    @inlinable
     public init(start: CalendarDate, end: CalendarDate) {
         self.start = start
         duration = start.duration(to: end)
     }
     
     /// The end date.
+    @inlinable
     public var end: CalendarDate {
         start.advanced(by: duration)
     }
     
     /// Indicates whether this interval contains the given date.
+    @inlinable
     public func contains(_ date: CalendarDate) -> Bool {
         start <= date && date <= end
     }
@@ -77,12 +82,14 @@ public struct CalendarDateInterval: Hashable, Sendable {
 }
 
 extension CalendarDateInterval: Codable {
+    @inlinable
     public init(from decoder: Decoder) throws {
         var container = try decoder.unkeyedContainer()
         start = try container.decode(CalendarDate.self)
         duration = try container.decode(TimeDifference.self)
     }
     
+    @inlinable
     public func encode(to encoder: Encoder) throws {
         var container = encoder.unkeyedContainer()
         try container.encode(start)

@@ -41,23 +41,27 @@ where Stride == Int {
 extension CalendarSubdivision {
     /// Returns a calendar subdivision containing the current date at the
     /// moment of access.
+    @inlinable
     public static var current: Self {
         self.init()
     }
     
     /// Creates a calendar subdivision containing the current date at the
     /// moment of access.
+    @inlinable
     public init() {
         self.init(Date.now)
     }
     
     /// The time span covered by the given calendar subdivision.
+    @inlinable
     public var dateInterval: CalendarDateInterval {
         CalendarDateInterval(start: start, end: self.advanced(by: 1).start)
     }
     
     /// Returns a calendar subdivision offset by adding components to a
     /// given calendar subdivision.
+    @inlinable
     public static func + (lhs: Self, rhs: CalendarDate.Components) -> Self {
         // (lhs.start + rhs).subdivision(for: self.unit) as! Self
         .init((lhs.start + rhs).date)
@@ -65,16 +69,19 @@ extension CalendarSubdivision {
     
     /// Returns a calendar subdivision offset by subtracting components from a
     /// given calendar subdivision.
+    @inlinable
     public static func - (lhs: Self, rhs: CalendarDate.Components) -> Self {
         .init((lhs.start + rhs.negated).date)
     }
     
     /// Adds the given components to a calendar subdivision.
+    @inlinable
     public static func += (lhs: inout Self, rhs: CalendarDate.Components) {
         lhs = lhs + rhs
     }
     
     /// Subtracts the given components from a calendar subdivision.
+    @inlinable
     public static func -= (lhs: inout Self, rhs: CalendarDate.Components) {
         lhs = lhs - rhs
     }
@@ -93,6 +100,7 @@ extension CalendarSubdivision {
 
 // Conform to Comparable
 extension CalendarSubdivision {
+    @inlinable
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.id < rhs.id
     }
@@ -100,6 +108,7 @@ extension CalendarSubdivision {
 
 // Conform to Strideable
 extension CalendarSubdivision {
+    @inlinable
     public func advanced(by n: Int) -> Self {
         .init(start + .count(n, of: Self.unit))
     }
@@ -121,10 +130,12 @@ extension CalendarSubdivision {
 
 // Conform to RawRepresentable
 extension CalendarSubdivision {
+    @inlinable
     public init?(rawValue: Int) {
         self.init(id: rawValue)
     }
     
+    @inlinable
     public var rawValue: Int {
         id
     }
@@ -132,12 +143,14 @@ extension CalendarSubdivision {
 
 // Conform to Equatable
 extension CalendarSubdivision {
+    @inlinable
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 }
 
 extension CalendarSubdivision {
+    @usableFromInline
     static func subdivisions(
         of smaller: Calendar.Component,
         in larger: Calendar.Component,

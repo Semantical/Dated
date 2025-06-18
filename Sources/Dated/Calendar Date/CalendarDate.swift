@@ -11,6 +11,7 @@ public struct CalendarDate: Hashable, Sendable {
     public let id: Int
     
     /// Creates a calendar date from the current date at the moment of access.
+    @inlinable
     public init() {
         self.init(Date.now)
     }
@@ -18,12 +19,14 @@ public struct CalendarDate: Hashable, Sendable {
     /// Creates a calendar date from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer only to recreate a calendar date whose ID has been saved previously.
+    @inlinable
     public init(id: Int) {
         self.id = id
     }
     
     /// Creates a calendar date preserving the hour of day from the original
     /// time zone.
+    @inlinable
     public init(_ localDate: LocalDate) {
         self = localDate.calendarDate
     }
@@ -41,9 +44,11 @@ public struct CalendarDate: Hashable, Sendable {
     }
     
     /// Returns the current date at the moment of access.
+    @inlinable
     public static var now: CalendarDate { CalendarDate() }
     
     // swift-format-ignore
+    @inlinable
     init(components: DateComponents, dLSTFlag: Bool = false) {
         let dLST   = (dLSTFlag ? 1 : 0)       << Bits.dLSTOffset
         let second = (components.second ?? 0) << Bits.secondOffset
@@ -75,6 +80,7 @@ public struct CalendarDate: Hashable, Sendable {
     }
     
     // Daylight saving time
+    @inlinable
     var dLST: Bool {
         ((id & Bits.dLSTMask) >> Bits.dLSTOffset) == 1
     }
@@ -82,6 +88,7 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Retrieving Containing Subdivisions
     
     /// The day containing the given calendar date.
+    @inlinable
     public var day: Day {
         .init(id: id)
     }
@@ -92,11 +99,13 @@ public struct CalendarDate: Hashable, Sendable {
     }
     
     /// The month containing the given calendar date.
+    @inlinable
     public var month: Month {
         .init(id: id)
     }
     
     /// The year containing the given calendar date.
+    @inlinable
     public var year: Year {
         .init(id: id)
     }
@@ -116,36 +125,43 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Accessing Calendar Components
     
     /// The second component.
+    @inlinable
     public var secondOfHour: Int {
         (id & Bits.secondMask) >> Bits.secondOffset
     }
     
     /// The minute component.
+    @inlinable
     public var minuteOfHour: Int {
         (id & Bits.minuteMask) >> Bits.minuteOffset
     }
     
     /// The hour component.
+    @inlinable
     public var hourOfDay: Int {
         (id & Bits.hourMask) >> Bits.hourOffset
     }
     
     /// The day component.
+    @inlinable
     public var dayOfMonth: Int {
         (id & Bits.dayMask) >> Bits.dayOffset
     }
     
     /// The month component.
+    @inlinable
     public var monthOfYear: Int {
         (id & Bits.monthMask) >> Bits.monthOffset
     }
     
     /// The year component.
+    @inlinable
     public var yearOfEra: Int {
         (id & Bits.yearMask) >> Bits.yearOffset
     }
     
     /// The era component.
+    @inlinable
     public var era: Int {
         (id & Bits.eraMask) >> Bits.eraOffset
     }
@@ -155,6 +171,7 @@ public struct CalendarDate: Hashable, Sendable {
     public enum Unit {
         case era, year, month, week, day, hour, minute, second
         
+        @inlinable
         public var calendarComponent: Calendar.Component {
             switch self {
             case .era: .era
@@ -199,13 +216,21 @@ public struct CalendarDate: Hashable, Sendable {
             self.seconds = seconds
         }
         
+        @inlinable
         public static func eras(_ count: Int) -> Self { .init(eras: count) }
+        @inlinable
         public static func years(_ count: Int) -> Self { .init(years: count) }
+        @inlinable
         public static func months(_ count: Int) -> Self { .init(months: count) }
+        @inlinable
         public static func weeks(_ count: Int) -> Self { .init(weeks: count) }
+        @inlinable
         public static func days(_ count: Int) -> Self { .init(days: count) }
+        @inlinable
         public static func hours(_ count: Int) -> Self { .init(hours: count) }
+        @inlinable
         public static func minutes(_ count: Int) -> Self { .init(minutes: count) }
+        @inlinable
         public static func seconds(_ count: Int) -> Self { .init(seconds: count) }
         
         public static func count(_ count: Int, of unit: CalendarDate.Unit) -> Self {
@@ -221,6 +246,7 @@ public struct CalendarDate: Hashable, Sendable {
             }
         }
         
+        @inlinable
         public var calendarComponents: DateComponents {
             DateComponents(
                 era: eras,
@@ -234,6 +260,7 @@ public struct CalendarDate: Hashable, Sendable {
             )
         }
         
+        @inlinable
         var negated: Self {
             .init(
                 eras: negate(eras),
@@ -244,7 +271,8 @@ public struct CalendarDate: Hashable, Sendable {
             )
         }
         
-        private func negate(_ value: Int?) -> Int? {
+        @inlinable
+        func negate(_ value: Int?) -> Int? {
             guard let value = value else { return nil }
             return -value
         }
@@ -263,11 +291,13 @@ public struct CalendarDate: Hashable, Sendable {
     }
     
     /// Adds the given components to a calendar date.
+    @inlinable
     public static func += (lhs: inout CalendarDate, rhs: Components) {
         lhs = lhs + rhs
     }
     
     /// Subtracts the given components from a calendar date.
+    @inlinable
     public static func -= (lhs: inout CalendarDate, rhs: Components) {
         lhs = lhs - rhs
     }
@@ -275,11 +305,13 @@ public struct CalendarDate: Hashable, Sendable {
     // MARK: - Getting Temporal Boundaries
     
     /// A calendar date in the distant future.
+    @inlinable
     public static var distantFuture: CalendarDate {
         .init(Date.distantFuture)
     }
     
     /// A local calendar in the distant past.
+    @inlinable
     public static var distantPast: CalendarDate {
         .init(Date.distantPast)
     }
@@ -288,6 +320,7 @@ public struct CalendarDate: Hashable, Sendable {
     
     /// Only for testing purposes, to make the current calendar testable.
     @TaskLocal
+    @usableFromInline
     package static var calendar = Calendar.current
 }
 
@@ -296,10 +329,12 @@ public struct CalendarDate: Hashable, Sendable {
 // InstantProtocol Conformance
 
 extension CalendarDate: InstantProtocol {
+    @inlinable
     public func advanced(by duration: TimeDifference) -> CalendarDate {
         .init(date + Double(duration.seconds))
     }
     
+    @inlinable
     public func duration(to other: CalendarDate) -> TimeDifference {
         .seconds(Int(other.date.timeIntervalSince(date)))
     }
@@ -309,10 +344,12 @@ extension CalendarDate: InstantProtocol {
 
 extension CalendarDate: Codable {
     /// Creates a calendar date by decoding from the given decoder.
+    @inlinable
     public init(from decoder: Decoder) throws {
         self.init(id: try Int(from: decoder))
     }
     
+    @inlinable
     public func encode(to encoder: Encoder) throws {
         try id.encode(to: encoder)
     }
@@ -321,10 +358,12 @@ extension CalendarDate: Codable {
 // RawRepresentable Conformance
 
 extension CalendarDate: RawRepresentable {
+    @inlinable
     public var rawValue: Int {
         id
     }
     
+    @inlinable
     public init?(rawValue: Int) {
         self.init(id: rawValue)
     }
@@ -333,6 +372,7 @@ extension CalendarDate: RawRepresentable {
 // Comparable Conformance
 
 extension CalendarDate: Comparable {
+    @inlinable
     public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.id < rhs.id
     }
@@ -347,46 +387,48 @@ extension CalendarDate: CustomDebugStringConvertible {
 // MARK: - Bitmasks
 
 // swift-format-ignore
+@usableFromInline
 enum Bits {
     // Number of bits each calendar subdivision is represented with.
-    static let dLSTBits   = 1
-    static let secondBits = 6 // 0...59
-    static let minuteBits = 6 // 0...59
-    static let hourBits   = 5 // 0...23
-    static let dayBits    = 5 // 1...31
-    static let monthBits  = 4 // 1..<13 (Hebrew, Ethiopic)
+    @inlinable static var dLSTBits:   Int { 1 }
+    @inlinable static var secondBits: Int { 6 } // 0...59
+    @inlinable static var minuteBits: Int { 6 } // 0...59
+    @inlinable static var hourBits:   Int { 5 } // 0...23
+    @inlinable static var dayBits:    Int { 5 } // 1...31
+    @inlinable static var monthBits:  Int { 4 } // 1..<13 (Hebrew, Ethiopic)
 
     // Our bit patterns are either going to use `dayBits` + `monthsBits`, or:
-    static let weekBits  =  6 // 1...55 (Hebrew)
+    @inlinable static var weekBits:  Int {  6 } // 1...55 (Hebrew)
 
     // The following two components will always be present.
-    static let yearBits  = 20 // 0..<1_048_576 (> 7515, Ethiopic Amete Alem)
-    static let eraBits   = 16 // 0..<65_536 (>  236, Japanese)
+    @inlinable static var yearBits:  Int { 20 } // 0..<1_048_576 (> 7515, Ethiopic Amete Alem)
+    @inlinable static var eraBits:   Int { 16 } // 0..<65_536 (>  236, Japanese)
 
     // The offset at which a calendar subdivision appears in the bit pattern.
-    static let dLSTOffset   = 0
-    static let secondOffset = dLSTOffset   + dLSTBits
-    static let minuteOffset = secondOffset + secondBits
-    static let hourOffset   = minuteOffset + minuteBits
-    static let dayOffset    = hourOffset   + hourBits
-    static let monthOffset  = dayOffset    + dayBits
-    static let yearOffset   = monthOffset  + monthBits
-    static let eraOffset    = yearOffset   + yearBits
+    @inlinable static var dLSTOffset:   Int { 0 }
+    @inlinable static var secondOffset: Int { dLSTOffset   + dLSTBits }
+    @inlinable static var minuteOffset: Int { secondOffset + secondBits }
+    @inlinable static var hourOffset:   Int { minuteOffset + minuteBits }
+    @inlinable static var dayOffset:    Int { hourOffset   + hourBits }
+    @inlinable static var monthOffset:  Int { dayOffset    + dayBits }
+    @inlinable static var yearOffset:   Int { monthOffset  + monthBits }
+    @inlinable static var eraOffset:    Int { yearOffset   + yearBits }
 
     // Our types use either (days, months) or weeks, so they can share the same
     // place in the bit pattern:
-    static let weekOffset   = dayOffset
+    @inlinable static var weekOffset:   Int { dayOffset }
 
     // A mask starting at the lowest significant bit with a given length.
+    @inlinable
     static func mask(_ bits: Int) -> Int { (1 << bits) - 1 }
 
-    static let dLSTMask   = mask(dLSTBits)   << dLSTOffset
-    static let secondMask = mask(secondBits) << secondOffset
-    static let minuteMask = mask(minuteBits) << minuteOffset
-    static let hourMask   = mask(hourBits)   << hourOffset
-    static let dayMask    = mask(dayBits)    << dayOffset
-    static let monthMask  = mask(monthBits)  << monthOffset
-    static let weekMask   = mask(weekBits)   << dayOffset
-    static let yearMask   = mask(yearBits)   << yearOffset
-    static let eraMask    = mask(eraBits)    << eraOffset
+    @inlinable static var dLSTMask:   Int { mask(dLSTBits)   << dLSTOffset }
+    @inlinable static var secondMask: Int { mask(secondBits) << secondOffset }
+    @inlinable static var minuteMask: Int { mask(minuteBits) << minuteOffset }
+    @inlinable static var hourMask:   Int { mask(hourBits)   << hourOffset }
+    @inlinable static var dayMask:    Int { mask(dayBits)    << dayOffset }
+    @inlinable static var monthMask:  Int { mask(monthBits)  << monthOffset }
+    @inlinable static var weekMask:   Int { mask(weekBits)   << dayOffset }
+    @inlinable static var yearMask:   Int { mask(yearBits)   << yearOffset }
+    @inlinable static var eraMask:    Int { mask(eraBits)    << eraOffset }
 }

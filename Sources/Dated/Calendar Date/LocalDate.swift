@@ -9,26 +9,31 @@ public struct LocalDate: Hashable, Sendable {
     public var timeZone: TimeZone
     
     /// Creates a new local date from the current date at the moment of access.
+    @inlinable
     public init() {
         self = .now
     }
     
     /// Creates a new local date using the current time zone.
+    @inlinable
     public init(_ date: CalendarDate) {
         self.init(date: date.date, timeZone: CalendarDate.calendar.timeZone)
     }
     
     /// Creates a new local date using the current time zone.
+    @inlinable
     public init(_ date: Date) {
         self.init(date: date, timeZone: CalendarDate.calendar.timeZone)
     }
     
     /// Returns the current date in the current time zone at the
     /// moment of access.
+    @inlinable
     public static var now: LocalDate {
         .init(Date.now)
     }
     
+    @inlinable
     public init(date: Date, timeZone: TimeZone) {
         self.date = date
         self.timeZone = TimeZone(secondsFromGMT: timeZone.secondsFromGMT(for: date))!
@@ -54,11 +59,13 @@ public struct LocalDate: Hashable, Sendable {
     // MARK: - Getting Temporal Boundaries
     
     /// A local date in the distant future.
+    @inlinable
     public static var distantFuture: LocalDate {
         .init(date: .distantFuture, timeZone: .gmt)
     }
     
     /// A local date in the distant past.
+    @inlinable
     public static var distantPast: LocalDate {
         .init(date: .distantPast, timeZone: .gmt)
     }
@@ -89,29 +96,33 @@ extension LocalDate: Codable {
 // Comparable Conformance
 
 extension LocalDate: Comparable {
-    private var _dateComponents: DateComponents {
-        Calendar(gregorianWithTimeZone: timeZone)
+    @inlinable var _dateComponents: DateComponents {
+        Calendar(_gregorianWithTimeZone: timeZone)
             .dateComponents(
                 [.nanosecond, .second, .minute, .hour, .day, .month, .year, .era],
                 from: date
             )
     }
     
-    private var _date: Date {
-        Calendar(gregorianWithTimeZone: .gmt)
-            .date(from: _dateComponents)!
+    @inlinable
+    var _date: Date {
+        Calendar(_gregorianWithTimeZone: .gmt).date(from: _dateComponents)!
     }
     
+    @inlinable
     public static func == (lhs: LocalDate, rhs: LocalDate) -> Bool {
         lhs._dateComponents == rhs._dateComponents
     }
     
+    @inlinable
     public static func < (lhs: LocalDate, rhs: LocalDate) -> Bool {
         lhs._date < rhs._date
     }
 }
-private extension Calendar {
-    init(gregorianWithTimeZone timeZone: TimeZone) {
+
+extension Calendar {
+    @inlinable
+    init(_gregorianWithTimeZone timeZone: TimeZone) {
         self.init(identifier: .gregorian)
         self.timeZone = timeZone
     }

@@ -6,6 +6,7 @@ import Foundation
 /// A week in the current calendar.
 public struct Week: CalendarSubdivision {
     /// Returns the unit `.week`.
+    @inlinable
     public static var unit: CalendarDate.Unit { .week }
     
     /// An integer suitable to be used as a key in a database table.
@@ -19,11 +20,13 @@ public struct Week: CalendarSubdivision {
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a week value whose ID has been saved previously.
+    @inlinable
     public init(id: Int) {
         self.id = id & (Bits.weekMask + Bits.yearMask + Bits.eraMask)
     }
     
     /// Creates a week in the user's preferred calendar.
+    @inlinable
     public init(_ date: CalendarDate) {
         self.init(date.date)
     }
@@ -45,28 +48,33 @@ public struct Week: CalendarSubdivision {
     // MARK: - Accessing Calendar Components
     
     /// The week component.
+    @inlinable
     public var weekOfYear: Int {
         (id & Bits.weekMask) >> Bits.weekOffset
     }
     
     /// The year component.
+    @inlinable
     public var yearOfEra: Int {
         (id & Bits.yearMask) >> Bits.yearOffset
     }
     
     /// The era component.
+    @inlinable
     public var era: Int {
         (id & Bits.eraMask) >> Bits.eraOffset
     }
     
     /// All date components of the given week.
+    @inlinable
     public var components: CalendarDate.Components {
         CalendarDate.Components(eras: era, years: yearOfEra, weeks: weekOfYear)
     }
     
     // MARK: - Related Dates
     
-    private var firstInstance: Date {
+    @inlinable
+    var firstInstance: Date {
         CalendarDate.calendar.date(
             from: DateComponents(
                 era: era,
@@ -77,11 +85,13 @@ public struct Week: CalendarSubdivision {
     }
     
     /// The first moment of this week.
+    @inlinable
     public var start: CalendarDate {
         CalendarDate(firstInstance)
     }
     
     /// The list of weekdays ordered by date.
+    @inlinable
     public var days: [Day] {
         Day.subdivisions(of: .weekday, in: .weekOfYear, for: firstInstance)
     }
@@ -89,12 +99,14 @@ public struct Week: CalendarSubdivision {
     // MARK: - Retrieving Containing Subdivisions
     
     /// The year containing the receiver.
+    @inlinable
     public var year: Year {
         .init(id: id)
     }
 }
 
 extension Week: CustomDebugStringConvertible {
+    @inlinable
     public var debugDescription: String {
         "\(yearOfEra)-\(weekOfYear)"
     }

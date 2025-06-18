@@ -11,68 +11,84 @@ public struct TimeDifference: Hashable, Sendable, RawRepresentable {
    
     public var seconds: Int
     
+    @inlinable
     public var minutes: Int { seconds / 60 }
     
+    @inlinable
     public var rawValue: Int { seconds }
     
     /// Creates a time difference of 0 seconds.
+    @inlinable
     public init() {
         self.seconds = 0
     }
     
     /// Creates a time difference based on the given number of minutes.
+    @inlinable
     public init(seconds: Int) {
         self.seconds = seconds
     }
     
+    @inlinable
     public init?(rawValue: Int) {
         self.seconds = rawValue
     }
     
+    @inlinable
     public static func seconds(_ value: Int) -> TimeDifference {
         TimeDifference(seconds: value)
     }
     
+    @inlinable
     public static func minutes(_ value: Int) -> TimeDifference {
         TimeDifference(seconds: value * 60)
     }
 }
 
 extension TimeDifference: DurationProtocol {
+    @inlinable
     public static func + (lhs: TimeDifference, rhs: TimeDifference) -> TimeDifference {
         .seconds(lhs.seconds + rhs.seconds)
     }
     
+    @inlinable
     public static func - (lhs: TimeDifference, rhs: TimeDifference) -> TimeDifference {
         .seconds(lhs.seconds - rhs.seconds)
     }
     
+    @inlinable
     public static func * (lhs: TimeDifference, rhs: Int) -> TimeDifference {
         .seconds(lhs.seconds * rhs)
     }
     
+    @inlinable
     public static func / (lhs: TimeDifference, rhs: Int) -> TimeDifference {
         .seconds(lhs.seconds / rhs)
     }
     
+    @inlinable
     public static func / (lhs: TimeDifference, rhs: TimeDifference) -> Double {
         Double(lhs.seconds) / Double(rhs.seconds)
     }
     
+    @inlinable
     public static var zero: TimeDifference {
         .seconds(0)
     }
     
+    @inlinable
     public static func < (lhs: TimeDifference, rhs: TimeDifference) -> Bool {
         lhs.seconds < rhs.seconds
     }
 }
 
 extension TimeDifference: Codable {
+    @inlinable
     public init(from decoder: Decoder) throws {
         seconds = try Int(from: decoder)
     }
     
+    @inlinable
     public func encode(to encoder: Encoder) throws {
         try seconds.encode(to: encoder)
     }
@@ -81,14 +97,17 @@ extension TimeDifference: Codable {
 // MARK: - FormatStyle
 
 extension TimeDifference {
+    @inlinable
     public var duration: Duration {
         .seconds(seconds)
     }
     
+    @inlinable
     public func formatted() -> String {
         UnitsFormatStyle.units().format(self)
     }
     
+    @inlinable
     public func formatted<Style>(_ style: Style) -> String
     where Style: FormatStyle, Style.FormatInput == TimeDifference, Style.FormatOutput == String {
         style.format(self)
@@ -98,8 +117,10 @@ extension TimeDifference {
         public typealias FormatInput = TimeDifference
         public typealias FormatOutput = String
         
-        private var formatStyle: Duration.UnitsFormatStyle
+        @usableFromInline
+        var formatStyle: Duration.UnitsFormatStyle
         
+        @inlinable
         public init(
             allowedUnits: Set<Duration.UnitsFormatStyle.Unit>,
             width: Duration.UnitsFormatStyle.UnitWidth,
@@ -118,6 +139,7 @@ extension TimeDifference {
             )
         }
         
+        @inlinable
         public func format(_ value: TimeDifference) -> String {
             formatStyle.format(value.duration)
         }
@@ -125,6 +147,7 @@ extension TimeDifference {
 }
 
 extension FormatStyle where Self == TimeDifference.UnitsFormatStyle {
+    @inlinable
     public static func units(
         allowed units: Set<Duration.UnitsFormatStyle.Unit> = [.hours, .minutes, .seconds],
         width: Duration.UnitsFormatStyle.UnitWidth = .abbreviated,

@@ -6,6 +6,7 @@ import Foundation
 /// A year in the current calendar.
 public struct Year: CalendarSubdivision {
     /// Returns the unit `.year`.
+    @inlinable
     public static var unit: CalendarDate.Unit { .year }
     
     /// An integer suitable to be used as a key in a database table.
@@ -19,11 +20,13 @@ public struct Year: CalendarSubdivision {
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a year value whose ID has been saved previously.
+    @inlinable
     public init(id: Int) {
         self.id = id & (Bits.eraMask + Bits.yearMask)
     }
     
     /// Creates a year in the user's preferred calendar.
+    @inlinable
     public init(_ date: CalendarDate) {
         self.init(id: date.id)
     }
@@ -42,32 +45,38 @@ public struct Year: CalendarSubdivision {
     // MARK: - Accessing Calendar Components
     
     /// The year component.
+    @inlinable
     public var yearOfEra: Int {
         (id & Bits.yearMask) >> Bits.yearOffset
     }
     
     /// The era component.
+    @inlinable
     public var era: Int {
         (id & Bits.eraMask) >> Bits.eraOffset
     }
     
     /// All date components of the given year.
+    @inlinable
     public var components: CalendarDate.Components {
         CalendarDate.Components(eras: era, years: yearOfEra)
     }
     
     // MARK: - Related Dates
     
-    private var firstInstance: Date {
+    @inlinable
+    var firstInstance: Date {
         CalendarDate.calendar.date(from: DateComponents(era: era, year: yearOfEra))!
     }
     
     /// The first moment of this year.
+    @inlinable
     public var start: CalendarDate {
         CalendarDate(firstInstance)
     }
     
     /// The list of all weeks in the given year ordered by date.
+    @inlinable
     public var weeks: [Week] {
         Week.subdivisions(
             of: .weekOfYear,
@@ -77,12 +86,14 @@ public struct Year: CalendarSubdivision {
     }
     
     /// The list of all months in the given year ordered by date.
+    @inlinable
     public var months: [Month] {
         Month.subdivisions(of: .month, in: .year, for: firstInstance)
     }
 }
 
 extension Year: CustomDebugStringConvertible {
+    @inlinable
     public var debugDescription: String {
         description
     }
@@ -96,6 +107,7 @@ extension Year: LosslessStringConvertible, CustomStringConvertible {
         self.init(date)
     }
     
+    @inlinable
     public var description: String {
         "\(yearOfEra)"
     }

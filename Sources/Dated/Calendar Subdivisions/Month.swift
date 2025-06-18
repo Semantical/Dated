@@ -6,6 +6,7 @@ import Foundation
 /// A month in the current calendar.
 public struct Month: CalendarSubdivision {
     /// Returns the unit `.month`.
+    @inlinable
     public static var unit: CalendarDate.Unit { .month }
     
     /// An integer suitable to be used as a key in a database table.
@@ -20,11 +21,13 @@ public struct Month: CalendarSubdivision {
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a Month value whose ID has been saved previously.
+    @inlinable
     public init(id: Int) {
         self.id = id & (Bits.eraMask + Bits.yearMask + Bits.monthMask)
     }
     
     /// Creates a month in the user's preferred calendar.
+    @inlinable
     public init(_ date: CalendarDate) {
         self.init(id: date.id)
     }
@@ -46,38 +49,45 @@ public struct Month: CalendarSubdivision {
     // MARK: - Accessing Calendar Components
     
     /// The month component.
+    @inlinable
     public var monthOfYear: Int {
         (id & Bits.monthMask) >> Bits.monthOffset
     }
     
     /// The year component.
+    @inlinable
     public var yearOfEra: Int {
         (id & Bits.yearMask) >> Bits.yearOffset
     }
     
     /// The era component.
+    @inlinable
     public var era: Int {
         (id & Bits.eraMask) >> Bits.eraOffset
     }
     
     /// All date components of the given month.
+    @inlinable
     public var components: CalendarDate.Components {
         CalendarDate.Components(eras: era, years: yearOfEra, months: monthOfYear)
     }
     
     // MARK: - Related Dates
     
-    private var firstInstance: Date {
+    @usableFromInline
+    var firstInstance: Date {
         CalendarDate.calendar
             .date(from: DateComponents(era: era, year: yearOfEra, month: monthOfYear))!
     }
     
     /// The first moment of this month.
+    @inlinable
     public var start: CalendarDate {
         CalendarDate(firstInstance)
     }
     
     /// The list of all days in the given month ordered by date.
+    @inlinable
     public var days: [Day] {
         Day.subdivisions(of: .day, in: .month, for: firstInstance)
     }
@@ -85,12 +95,14 @@ public struct Month: CalendarSubdivision {
     // MARK: - Retrieving Containing Subdivisions
     
     /// The year containing the receiver.
+    @inlinable
     public var year: Year {
         .init(id: id)
     }
 }
 
 extension Month: CustomDebugStringConvertible {
+    @inlinable
     public var debugDescription: String {
         description
     }
@@ -104,6 +116,7 @@ extension Month: LosslessStringConvertible, CustomStringConvertible {
         self.init(date)
     }
     
+    @inlinable
     public var description: String {
         "\(yearOfEra)-\(monthOfYear)"
     }
