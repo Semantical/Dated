@@ -167,11 +167,11 @@ extension FormatStyle where Self == TimeDifference.UnitsFormatStyle {
     }
 }
 
-#if canImport(Playgrounds)
-import Playgrounds
-
-#Playground("TimeDifference.FormatStyle") {
-    let fiveMin = TimeDifference.seconds(5 * 60).formatted()
-    let twoHr = TimeDifference.seconds(2 * 60 * 60).formatted()
-}
-#endif
+//#if canImport(Playgrounds)
+//import Playgrounds
+//
+//#Playground("TimeDifference.FormatStyle") {
+//    let fiveMin = TimeDifference.seconds(5 * 60).formatted()
+//    let twoHr = TimeDifference.seconds(2 * 60 * 60).formatted()
+//}
+//#endif

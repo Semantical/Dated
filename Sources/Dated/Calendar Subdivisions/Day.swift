@@ -316,13 +316,13 @@ extension FormatStyle where Self == Day.FormatStyle {
     public static var day: Day.FormatStyle { Day.FormatStyle() }
 }
 
-#if canImport(Playgrounds)
-import Playgrounds
-
-@available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
-#Playground("Day.FormatStyle") {
-    for offset in -8..<9 {
-        let day = Day().advanced(by: offset).formatted()
-    }
-}
-#endif
+//#if canImport(Playgrounds)
+//import Playgrounds
+//
+//@available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
+//#Playground("Day.FormatStyle") {
+//    for offset in -8..<9 {
+//        let day = Day().advanced(by: offset).formatted()
+//    }
+//}
+//#endif
