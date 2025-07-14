@@ -4,7 +4,7 @@
 import Foundation
 
 /// A point in time relative to the current calendar.
-public struct CalendarDate: Hashable, Sendable {
+public struct CalendarDate: Sendable {
     /// An integer suitable to be used as a key in a database table.
     ///
     /// - note: The ordering of ``CalendarDate`` values is the same as the ordering of their IDs. If both `date1` and `date2` are ``CalendarDate`` values, `date1` is ordered before `date2` when its ID is lower than `date2`'s.
@@ -381,6 +381,22 @@ extension CalendarDate: Comparable {
 extension CalendarDate: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth) \(hourOfDay):\(minuteOfHour):\(secondOfHour)"
+    }
+}
+
+// Hashable Conformance
+
+extension CalendarDate: Equatable {
+    @inlinable
+    public static func == (lhs: CalendarDate, rhs: CalendarDate) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+extension CalendarDate: Hashable {
+    @inlinable
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
