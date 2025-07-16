@@ -49,7 +49,7 @@ public struct CalendarDate: Sendable {
     
     // swift-format-ignore
     @inlinable
-    init(components: DateComponents, dLSTFlag: Bool = false) {
+    public init(components: DateComponents, dLSTFlag: Bool = false) {
         let dLST   = (dLSTFlag ? 1 : 0)       << Bits.dLSTOffset
         let second = (components.second ?? 0) << Bits.secondOffset
         let minute = (components.minute ?? 0) << Bits.minuteOffset
@@ -186,7 +186,7 @@ public struct CalendarDate: Sendable {
         }
     }
     
-    public struct Components {
+    public struct Components: Hashable, Sendable {
         public var eras: Int?
         public var years: Int?
         public var months: Int?
