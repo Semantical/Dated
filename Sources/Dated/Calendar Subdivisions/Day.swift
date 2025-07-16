@@ -241,12 +241,6 @@ extension Day {
         public var capitalizationContext: FormatStyleCapitalizationContext
         public var locale: Locale
         
-#if canImport(Darwin)
-        // TODO: figure out Swift-native caching
-        // This is safe according to NSCache docs
-        public static nonisolated(unsafe) let cache = NSCache<NSDate, NSString>()
-#endif
-        
         public init(
             capitalizationContext: FormatStyleCapitalizationContext = .beginningOfSentence,
             locale: Locale = .current,
@@ -286,13 +280,6 @@ extension Day {
         public func format(_ day: Day) -> String {
             let date = day.start.date
             
-#if canImport(Darwin)
-            let key = date as NSDate
-            if let cached = Self.cache.object(forKey: key) {
-                return cached as String
-            }
-#endif
-            
             let output = if (-1...1).contains(day.distance(to: .current)) {
                 date.formatted(relativeStyle)
             } else if day.isInThisWeek {
@@ -300,10 +287,6 @@ extension Day {
             } else {
                 date.formatted(absoluteStyle)
             }
-            
-#if canImport(Darwin)
-            Self.cache.setObject(output as NSString, forKey: key)
-#endif
             
             return output
         }
