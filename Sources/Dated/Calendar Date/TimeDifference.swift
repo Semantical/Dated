@@ -94,6 +94,11 @@ extension TimeDifference: Codable {
     }
 }
 
+/// Negate a ``TimeDifference``.
+public prefix func - (rhs: TimeDifference) -> TimeDifference {
+    .seconds(-rhs.seconds)
+}
+
 // MARK: - FormatStyle
 
 extension TimeDifference {
