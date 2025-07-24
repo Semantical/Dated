@@ -229,22 +229,38 @@ extension Day: LosslessStringConvertible, CustomStringConvertible {
 /// - "EEE, MMM d" otherwise
 @available(iOS 18, macOS 15, watchOS 11, visionOS 2, macCatalyst 18, tvOS 18, *)
 extension Day {
+    /// Format a day relative to the current day.
     @inlinable
     public func formatted() -> String {
         FormatStyle().format(self)
+    }
+    
+    /// Format a day relative to another.
+    ///
+    /// For example:
+    /// ```swift
+    /// let yesterday = Day.current.previous
+    /// yesterday.format(relativeTo: yesterday) // "Today"
+    /// ```
+    @inlinable
+    public func formatted(relativeTo today: Day) -> String {
+        FormatStyle(relativeTo: today).format(self)
     }
     
     public struct FormatStyle: Foundation.FormatStyle {
         public typealias FormatInput = Day
         public typealias FormatOutput = String
         
+        public var today: Day
         public var capitalizationContext: FormatStyleCapitalizationContext
         public var locale: Locale
         
         public init(
+            relativeTo today: Day = .current,
             capitalizationContext: FormatStyleCapitalizationContext = .beginningOfSentence,
-            locale: Locale = .current,
+            locale: Locale = .autoupdatingCurrent,
         ) {
+            self.today = today
             self.capitalizationContext = capitalizationContext
             self.locale = locale
         }
@@ -279,10 +295,13 @@ extension Day {
         
         public func format(_ day: Day) -> String {
             let date = day.start.date
+            let offset = today.distance(to: .current)
+            let adjustedDay = day.advanced(by: offset)
+            let adjustedDistanceToToday = adjustedDay.distance(to: .current)
             
-            let output = if (-1...1).contains(day.distance(to: .current)) {
-                date.formatted(relativeStyle)
-            } else if day.isInThisWeek {
+            let output = if (-1...1).contains(adjustedDistanceToToday) {
+                adjustedDay.start.date.formatted(relativeStyle)
+            } else if day.week == today.week {
                 date.formatted(weekdayStyle)
             } else {
                 date.formatted(absoluteStyle)
