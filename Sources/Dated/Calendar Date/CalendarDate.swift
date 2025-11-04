@@ -380,7 +380,11 @@ extension CalendarDate: Comparable {
 
 extension CalendarDate: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth) \(hourOfDay):\(minuteOfHour):\(secondOfHour)"
+        let style = IntegerFormatStyle<Int>().precision(.integerLength(2))
+        let h = hourOfDay.formatted(style)
+        let m = minuteOfHour.formatted(style)
+        let s = secondOfHour.formatted(style)
+        return "\(yearOfEra)-\(monthOfYear)-\(dayOfMonth)T\(h):\(m):\(s)"
     }
 }
 
