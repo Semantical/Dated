@@ -318,10 +318,62 @@ public struct CalendarDate: Sendable {
     
     // MARK: - Current Calendar
     
-    /// Only for testing purposes, to make the current calendar testable.
+    /// Customize the calendar used by all Dated implementations.
     @TaskLocal
-    @usableFromInline
-    package static var calendar = Calendar.current
+    public static var calendar = Calendar.current
+}
+
+// MARK: - Setting Time
+
+extension CalendarDate {
+    /// Returns a calendar date whose time components are replaced by the given
+    /// values, using the preferred calendar and respecting repeated or skipped
+    /// wall-clock times.
+    public func settingTime(
+        hour: Int? = nil,
+        minute: Int? = nil,
+        second: Int? = nil,
+        repeatedTimePolicy: Calendar.RepeatedTimePolicy = .last,
+        direction: Calendar.SearchDirection = .forward,
+    ) -> CalendarDate? {
+        let calendar = CalendarDate.calendar
+        var components = calendar.dateComponents([.hour, .minute, .second], from: date)
+        
+        if let hour = hour {
+            guard (0..<24).contains(hour) else { return nil }
+            components.hour = hour
+        }
+        if let minute = minute {
+            guard (0..<60).contains(minute) else { return nil }
+            components.minute = minute
+        }
+        if let second = second {
+            guard (0..<60).contains(second) else { return nil }
+            components.second = second
+        }
+        
+        guard
+            let targetHour = components.hour,
+            let targetMinute = components.minute,
+            let targetSecond = components.second
+        else {
+            return nil
+        }
+        
+        guard let result = calendar.date(
+            bySettingHour: targetHour,
+            minute: targetMinute,
+            second: targetSecond,
+            of: date,
+            matchingPolicy: .nextTimePreservingSmallerComponents,
+            repeatedTimePolicy: repeatedTimePolicy,
+            direction: direction,
+        ) else {
+            return nil
+        }
+        
+        return CalendarDate(result)
+    }
 }
 
 // MARK: - Conformances

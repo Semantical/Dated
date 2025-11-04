@@ -119,6 +119,7 @@ extension CalendarSubdivision {
     /// The value ordered immediately after self.
     @inlinable public var next: Self { advanced(by: 1) }
     
+    @inlinable
     public func distance(to other: Self) -> Int {
         guard self != other else { return 0 }
         // Using the variation of `dateComponents(_:from:to:)`
