@@ -57,6 +57,18 @@ func calendarDateArithmetic(with calendar: Calendar) throws {
 }
 
 @Test(arguments: Calendar.testCalendars)
+func calendarDateSubtractingTimeComponents(with calendar: Calendar) throws {
+    CalendarDate.$calendar.withValue(calendar) {
+        Date.withRandom(50) { date in
+            let calendarDate = CalendarDate(date)
+            #expect(calendarDate - .seconds(10) == CalendarDate(date.addingTimeInterval(-10)))
+            #expect(calendarDate - .minutes(5) == CalendarDate(date.addingTimeInterval(-300)))
+            #expect(calendarDate - .hours(2) == CalendarDate(date.addingTimeInterval(-7200)))
+        }
+    }
+}
+
+@Test(arguments: Calendar.testCalendars)
 func containingSubdivisions(with calendar: Calendar) throws {
     CalendarDate.$calendar.withValue(calendar) {
         Date.withRandom(50) {

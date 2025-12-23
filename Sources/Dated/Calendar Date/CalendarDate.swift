@@ -267,7 +267,10 @@ public struct CalendarDate: Sendable {
                 years: negate(years),
                 months: negate(months),
                 weeks: negate(weeks),
-                days: negate(days)
+                days: negate(days),
+                hours: negate(hours),
+                minutes: negate(minutes),
+                seconds: negate(seconds)
             )
         }
         
