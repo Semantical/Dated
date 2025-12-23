@@ -42,6 +42,30 @@ public struct Year: CalendarSubdivision {
         id = year + era
     }
     
+    /// Creates a year from constant components in the user's preferred calendar.
+    @inlinable
+    public init(_ year: _const Int) {
+        self.init(components: DateComponents(year: year))!
+    }
+    
+    /// Creates a year from components in the user's preferred calendar.
+    @inlinable
+    public init?(components: DateComponents) {
+        guard let date = CalendarDate.calendar.date(from: components) else { return nil }
+        let resolved = CalendarDate.calendar.dateComponents([.era, .year], from: date)
+        guard
+            let year = resolved.year,
+            let era = resolved.era
+        else { return nil }
+        self.init(_era: era, _year: year)
+    }
+
+    @usableFromInline init(_era: Int, _year: Int) {
+        let yearValue = _year << Bits.yearOffset
+        let eraValue = _era << Bits.eraOffset
+        id = yearValue + eraValue
+    }
+    
     // MARK: - Accessing Calendar Components
     
     /// The year component.

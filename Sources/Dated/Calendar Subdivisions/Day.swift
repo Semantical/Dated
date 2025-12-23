@@ -46,11 +46,35 @@ public struct Day: CalendarSubdivision {
         id = day + month + year + era
     }
     
+    /// Creates a day from constant components in the user's preferred calendar.
+    @inlinable
+    public init(_ day: _const Int, month: _const Int, year: _const Int) {
+        self.init(components: DateComponents(year: year, month: month, day: day))!
+    }
+    
     /// Creates a day from components in the user's preferred calendar.
-    public init?(year: Int, month: Int, day: Int) {
-        let components = DateComponents(year: year, month: month, day: day)
+    @inlinable
+    public init?(components: DateComponents) {
         guard let date = CalendarDate.calendar.date(from: components) else { return nil }
-        self.init(date)
+        let resolved = CalendarDate.calendar.dateComponents(
+            [.era, .year, .month, .day],
+            from: date
+        )
+        guard
+            let year = resolved.year,
+            let month = resolved.month,
+            let day = resolved.day,
+            let era = resolved.era
+        else { return nil }
+        self.init(_era: era, _year: year, _month: month, _day: day)
+    }
+
+    @usableFromInline init(_era: Int, _year: Int, _month: Int, _day: Int) {
+        let dayValue = _day << Bits.dayOffset
+        let monthValue = _month << Bits.monthOffset
+        let yearValue = _year << Bits.yearOffset
+        let eraValue = _era << Bits.eraOffset
+        id = dayValue + monthValue + yearValue + eraValue
     }
     
     // MARK: - Accessing Calendar Components

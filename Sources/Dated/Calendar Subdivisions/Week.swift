@@ -45,6 +45,37 @@ public struct Week: CalendarSubdivision {
         id = week + year + era
     }
     
+    /// Creates a week from constant components in the user's preferred calendar.
+    @inlinable
+    public init(_ week: _const Int, year: _const Int) {
+        self.init(
+            components: DateComponents(weekOfYear: week, yearForWeekOfYear: year)
+        )!
+    }
+    
+    /// Creates a week from components in the user's preferred calendar.
+    @inlinable
+    public init?(components: DateComponents) {
+        guard let date = CalendarDate.calendar.date(from: components) else { return nil }
+        let resolved = CalendarDate.calendar.dateComponents(
+            [.era, .weekOfYear, .yearForWeekOfYear],
+            from: date
+        )
+        guard
+            let week = resolved.weekOfYear,
+            let year = resolved.yearForWeekOfYear,
+            let era = resolved.era
+        else { return nil }
+        self.init(_era: era, _year: year, _week: week)
+    }
+
+    @usableFromInline init(_era: Int, _year: Int, _week: Int) {
+        let weekValue = _week << Bits.weekOffset
+        let yearValue = _year << Bits.yearOffset
+        let eraValue = _era << Bits.eraOffset
+        id = weekValue + yearValue + eraValue
+    }
+    
     // MARK: - Accessing Calendar Components
     
     /// The week component.

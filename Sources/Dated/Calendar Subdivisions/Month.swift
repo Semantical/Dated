@@ -46,6 +46,32 @@ public struct Month: CalendarSubdivision {
         id = month + year + era
     }
     
+    /// Creates a month from constant components in the user's preferred calendar.
+    @inlinable
+    public init(_ month: _const Int, year: _const Int) {
+        self.init(components: DateComponents(year: year, month: month))!
+    }
+    
+    /// Creates a month from components in the user's preferred calendar.
+    @inlinable
+    public init?(components: DateComponents) {
+        guard let date = CalendarDate.calendar.date(from: components) else { return nil }
+        let resolved = CalendarDate.calendar.dateComponents([.era, .year, .month], from: date)
+        guard
+            let year = resolved.year,
+            let month = resolved.month,
+            let era = resolved.era
+        else { return nil }
+        self.init(_era: era, _year: year, _month: month)
+    }
+
+    @usableFromInline init(_era: Int, _year: Int, _month: Int) {
+        let monthValue = _month << Bits.monthOffset
+        let yearValue = _year << Bits.yearOffset
+        let eraValue = _era << Bits.eraOffset
+        id = monthValue + yearValue + eraValue
+    }
+    
     // MARK: - Accessing Calendar Components
     
     /// The month component.
