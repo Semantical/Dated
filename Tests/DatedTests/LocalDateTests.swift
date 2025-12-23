@@ -26,6 +26,24 @@ func timeZones() throws {
 }
 
 @Test
+func calendarDatePreservesSeconds() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = .gmt
+    CalendarDate.$calendar.withValue(calendar) {
+        let date = calendar.date(from: DateComponents(
+            year: 2024,
+            month: 6,
+            day: 1,
+            hour: 12,
+            minute: 34,
+            second: 56
+        ))!
+        let local = LocalDate(date: date, timeZone: .gmt)
+        #expect(local.calendarDate.secondOfHour == 56)
+    }
+}
+
+@Test
 func localDateCodable() throws {
     try Date.withRandom(20) { date in
         let local = LocalDate(date: date, timeZone: .current)

@@ -50,7 +50,7 @@ public struct LocalDate: Hashable, Sendable {
         }
         return CalendarDate(
             components: calendar.dateComponents(
-                [.minute, .hour, .day, .month, .year, .era],
+                [.second, .minute, .hour, .day, .month, .year, .era],
                 from: date
             )
         )
