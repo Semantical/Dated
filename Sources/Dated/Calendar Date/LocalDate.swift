@@ -118,6 +118,11 @@ extension LocalDate: Comparable {
     public static func < (lhs: LocalDate, rhs: LocalDate) -> Bool {
         lhs._date < rhs._date
     }
+
+    @inlinable
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(_date)
+    }
 }
 
 extension Calendar {
