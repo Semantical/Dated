@@ -231,10 +231,19 @@ extension Day: CustomDebugStringConvertible {
 
 extension Day: LosslessStringConvertible, CustomStringConvertible {
     public init?(_ description: String) {
-        guard let date = try? Date(description, strategy: .iso8601.year().month().day()) else {
-            return nil
-        }
-        self.init(date)
+        guard
+            let match = description.wholeMatch(of: /^(\d+)-(\d+)-(\d+)$/),
+            let year = Int(match.1),
+            let month = Int(match.2),
+            let day = Int(match.3)
+        else { return nil }
+        self.init(
+            components: DateComponents(
+                year: year,
+                month: month,
+                day: day
+            )
+        )
     }
     
     @inlinable

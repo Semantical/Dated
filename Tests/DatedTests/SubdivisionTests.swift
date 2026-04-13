@@ -49,6 +49,23 @@ func subdivisionLosslessStringConvertible() async throws {
     #expect(Year(year.description) == year)
 }
 
+@Test(arguments: [
+    "UTC",
+    "America/Los_Angeles",
+    "Pacific/Honolulu",
+])
+func subdivisionStringParsingPreservesCalendarComponents(timeZoneIdentifier: String) throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.locale = Locale(identifier: "en_US_POSIX")
+    calendar.timeZone = try #require(TimeZone(identifier: timeZoneIdentifier))
+
+    CalendarDate.$calendar.withValue(calendar) {
+        #expect(Day("2026-04-13") == Day(13, month: 4, year: 2026))
+        #expect(Month("2026-04") == Month(4, year: 2026))
+        #expect(Year("2026") == Year(2026))
+    }
+}
+
 @Test
 func subdivisionComponentInitializers() throws {
     var calendar = Calendar(identifier: .iso8601)

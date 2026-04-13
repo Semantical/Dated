@@ -125,10 +125,11 @@ extension Year: CustomDebugStringConvertible {
 
 extension Year: LosslessStringConvertible, CustomStringConvertible {
     public init?(_ description: String) {
-        guard let date = try? Date(description, strategy: .iso8601.year()) else {
-            return nil
-        }
-        self.init(date)
+        guard
+            let match = description.wholeMatch(of: /^(\d+)$/),
+            let year = Int(match.1)
+        else { return nil }
+        self.init(components: DateComponents(year: year))
     }
     
     @inlinable

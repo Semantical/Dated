@@ -136,10 +136,17 @@ extension Month: CustomDebugStringConvertible {
 
 extension Month: LosslessStringConvertible, CustomStringConvertible {
     public init?(_ description: String) {
-        guard let date = try? Date(description, strategy: .iso8601.year().month()) else {
-            return nil
-        }
-        self.init(date)
+        guard
+            let match = description.wholeMatch(of: /^(\d+)-(\d+)$/),
+            let year = Int(match.1),
+            let month = Int(match.2)
+        else { return nil }
+        self.init(
+            components: DateComponents(
+                year: year,
+                month: month
+            )
+        )
     }
     
     @inlinable
