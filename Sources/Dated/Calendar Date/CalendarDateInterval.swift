@@ -41,7 +41,7 @@ public struct CalendarDateInterval: Hashable, Sendable {
     /// Indicates whether this interval contains the given date.
     @inlinable
     public func contains(_ date: CalendarDate) -> Bool {
-        start <= date && date <= end
+        start <= date && date < end
     }
     
     /// Returns smaller intervals, one per day the given date

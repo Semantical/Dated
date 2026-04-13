@@ -27,6 +27,11 @@ func intervalsPerDay() throws {
         // Test start and end.
         #expect(intervalsPerDay.first!.start == interval.start)
         #expect(intervalsPerDay.last!.end == interval.end)
+
+        for (lhs, rhs) in zip(intervalsPerDay, intervalsPerDay.dropFirst()) {
+            #expect(lhs.end == rhs.start)
+            #expect(!lhs.contains(rhs.start))
+        }
     }
 }
 
@@ -42,4 +47,18 @@ func dateIntervalCodable() throws {
         from: data
     )
     #expect(decoded == interval)
+}
+
+@Test
+func containsExcludesSharedEndBoundary() throws {
+    let start = CalendarDate.now
+    let boundary = start + .hours(1)
+    let nextBoundary = boundary + .hours(1)
+
+    let first = CalendarDateInterval(start: start, end: boundary)
+    let second = CalendarDateInterval(start: boundary, end: nextBoundary)
+
+    #expect(first.contains(start))
+    #expect(!first.contains(boundary))
+    #expect(second.contains(boundary))
 }
