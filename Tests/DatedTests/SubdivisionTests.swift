@@ -118,3 +118,19 @@ func subdivisionComponentInitializers() throws {
         #expect(Year(components: emptyYearComponents) == Year(emptyYearDate))
     }
 }
+
+@Test
+func yearWeeksCoverWeeksIntersectingCalendarYear() throws {
+    var calendar = Calendar(identifier: .iso8601)
+    calendar.locale = Locale(identifier: "en_US_POSIX")
+    calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+    let jan1 = try #require(calendar.date(from: DateComponents(year: 2021, month: 1, day: 1)))
+    let dec31 = try #require(calendar.date(from: DateComponents(year: 2021, month: 12, day: 31)))
+
+    CalendarDate.$calendar.withValue(calendar) {
+        let year = Year(2021)
+        #expect(year.weeks.first == Week(jan1))
+        #expect(year.weeks.last == Week(dec31))
+        #expect(year.weeks.count == 53)
+    }
+}

@@ -102,11 +102,9 @@ public struct Year: CalendarSubdivision {
     /// The list of all weeks in the given year ordered by date.
     @inlinable
     public var weeks: [Week] {
-        Week.subdivisions(
-            of: .weekOfYear,
-            in: .yearForWeekOfYear,
-            for: firstInstance
-        )
+        let firstWeek = start.week
+        let lastWeek = (dateInterval.end - .seconds(1)).week
+        return Array(stride(from: firstWeek, through: lastWeek, by: 1))
     }
     
     /// The list of all months in the given year ordered by date.
