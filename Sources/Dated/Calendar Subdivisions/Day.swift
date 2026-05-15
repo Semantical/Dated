@@ -14,14 +14,14 @@ public struct Day: CalendarSubdivision {
     /// - note: The ordering of ``Day`` values is the same as the ordering
     /// of their IDs. If both `day1` and `day2` are ``Day`` values,
     /// `day1` is ordered before `day2` when its ID is lower than `day2`'s.
-    public let id: Int
+    public let id: Int64
     
     /// Creates a day value from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a Day value whose ID has been saved previously.
     @inlinable
-    public init(id: Int) {
+    public init(id: Int64) {
         self.id = id & (Bits.eraMask + Bits.yearMask + Bits.monthMask + Bits.dayMask)
     }
     
@@ -38,10 +38,10 @@ public struct Day: CalendarSubdivision {
             [.day, .month, .year, .era], from: date
         )
 
-        let day   = (components.day   ?? 0) << Bits.dayOffset
-        let month = (components.month ?? 0) << Bits.monthOffset
-        let year  = (components.year  ?? 0) << Bits.yearOffset
-        let era   = (components.era   ?? 0) << Bits.eraOffset
+        let day   = Int64(components.day   ?? 0) << Bits.dayOffset
+        let month = Int64(components.month ?? 0) << Bits.monthOffset
+        let year  = Int64(components.year  ?? 0) << Bits.yearOffset
+        let era   = Int64(components.era   ?? 0) << Bits.eraOffset
 
         id = day + month + year + era
     }
@@ -70,10 +70,10 @@ public struct Day: CalendarSubdivision {
     }
 
     @usableFromInline init(_era: Int, _year: Int, _month: Int, _day: Int) {
-        let dayValue = _day << Bits.dayOffset
-        let monthValue = _month << Bits.monthOffset
-        let yearValue = _year << Bits.yearOffset
-        let eraValue = _era << Bits.eraOffset
+        let dayValue = Int64(_day) << Bits.dayOffset
+        let monthValue = Int64(_month) << Bits.monthOffset
+        let yearValue = Int64(_year) << Bits.yearOffset
+        let eraValue = Int64(_era) << Bits.eraOffset
         id = dayValue + monthValue + yearValue + eraValue
     }
     
@@ -82,7 +82,7 @@ public struct Day: CalendarSubdivision {
     /// The day component.
     @inlinable
     public var dayOfMonth: Int {
-        (id & Bits.dayMask) >> Bits.dayOffset
+        Int((id & Bits.dayMask) >> Bits.dayOffset)
     }
     
     /// The day of the week, represented by a number from 1 to 7 (where Sunday is always 1).
@@ -111,19 +111,19 @@ public struct Day: CalendarSubdivision {
     /// The month component.
     @inlinable
     public var monthOfYear: Int {
-        (id & Bits.monthMask) >> Bits.monthOffset
+        Int((id & Bits.monthMask) >> Bits.monthOffset)
     }
     
     /// The year component.
     @inlinable
     public var yearOfEra: Int {
-        (id & Bits.yearMask) >> Bits.yearOffset
+        Int((id & Bits.yearMask) >> Bits.yearOffset)
     }
     
     /// The era component.
     @inlinable
     public var era: Int {
-        (id & Bits.eraMask) >> Bits.eraOffset
+        Int((id & Bits.eraMask) >> Bits.eraOffset)
     }
     
     /// All date components of the given day.

@@ -14,14 +14,14 @@ public struct Year: CalendarSubdivision {
     /// - note: The ordering of ``Year`` values is the same as the ordering
     /// of their IDs. If both `year1` and `year2` are ``Year`` values,
     /// `year1` is ordered before `year2` when its ID is lower than `year2`'s.
-    public let id: Int
+    public let id: Int64
     
     /// Creates a year value from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a year value whose ID has been saved previously.
     @inlinable
-    public init(id: Int) {
+    public init(id: Int64) {
         self.id = id & (Bits.eraMask + Bits.yearMask)
     }
     
@@ -36,8 +36,8 @@ public struct Year: CalendarSubdivision {
     public init(_ date: Date) {
         let components = CalendarDate.calendar.dateComponents([.year, .era], from: date)
 
-        let year = (components.year ?? 0) << Bits.yearOffset
-        let era  = (components.era  ?? 0) << Bits.eraOffset
+        let year = Int64(components.year ?? 0) << Bits.yearOffset
+        let era  = Int64(components.era  ?? 0) << Bits.eraOffset
 
         id = year + era
     }
@@ -61,8 +61,8 @@ public struct Year: CalendarSubdivision {
     }
 
     @usableFromInline init(_era: Int, _year: Int) {
-        let yearValue = _year << Bits.yearOffset
-        let eraValue = _era << Bits.eraOffset
+        let yearValue = Int64(_year) << Bits.yearOffset
+        let eraValue = Int64(_era) << Bits.eraOffset
         id = yearValue + eraValue
     }
     
@@ -71,13 +71,13 @@ public struct Year: CalendarSubdivision {
     /// The year component.
     @inlinable
     public var yearOfEra: Int {
-        (id & Bits.yearMask) >> Bits.yearOffset
+        Int((id & Bits.yearMask) >> Bits.yearOffset)
     }
     
     /// The era component.
     @inlinable
     public var era: Int {
-        (id & Bits.eraMask) >> Bits.eraOffset
+        Int((id & Bits.eraMask) >> Bits.eraOffset)
     }
     
     /// All date components of the given year.

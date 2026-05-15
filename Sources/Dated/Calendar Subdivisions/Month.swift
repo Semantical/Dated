@@ -15,14 +15,14 @@ public struct Month: CalendarSubdivision {
     /// of their IDs. If both `month1` and `month2` are ``Month`` values,
     /// `month1` is ordered before `month2` when its ID is lower than
     /// `month2`'s.
-    public let id: Int
+    public let id: Int64
     
     /// Creates a month value from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a Month value whose ID has been saved previously.
     @inlinable
-    public init(id: Int) {
+    public init(id: Int64) {
         self.id = id & (Bits.eraMask + Bits.yearMask + Bits.monthMask)
     }
     
@@ -39,9 +39,9 @@ public struct Month: CalendarSubdivision {
             [.month, .year, .era], from: date
         )
 
-        let month = (components.month ?? 0) << Bits.monthOffset
-        let year  = (components.year  ?? 0) << Bits.yearOffset
-        let era   = (components.era   ?? 0) << Bits.eraOffset
+        let month = Int64(components.month ?? 0) << Bits.monthOffset
+        let year  = Int64(components.year  ?? 0) << Bits.yearOffset
+        let era   = Int64(components.era   ?? 0) << Bits.eraOffset
 
         id = month + year + era
     }
@@ -66,9 +66,9 @@ public struct Month: CalendarSubdivision {
     }
 
     @usableFromInline init(_era: Int, _year: Int, _month: Int) {
-        let monthValue = _month << Bits.monthOffset
-        let yearValue = _year << Bits.yearOffset
-        let eraValue = _era << Bits.eraOffset
+        let monthValue = Int64(_month) << Bits.monthOffset
+        let yearValue = Int64(_year) << Bits.yearOffset
+        let eraValue = Int64(_era) << Bits.eraOffset
         id = monthValue + yearValue + eraValue
     }
     
@@ -77,19 +77,19 @@ public struct Month: CalendarSubdivision {
     /// The month component.
     @inlinable
     public var monthOfYear: Int {
-        (id & Bits.monthMask) >> Bits.monthOffset
+        Int((id & Bits.monthMask) >> Bits.monthOffset)
     }
     
     /// The year component.
     @inlinable
     public var yearOfEra: Int {
-        (id & Bits.yearMask) >> Bits.yearOffset
+        Int((id & Bits.yearMask) >> Bits.yearOffset)
     }
     
     /// The era component.
     @inlinable
     public var era: Int {
-        (id & Bits.eraMask) >> Bits.eraOffset
+        Int((id & Bits.eraMask) >> Bits.eraOffset)
     }
     
     /// All date components of the given month.

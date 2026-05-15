@@ -8,7 +8,7 @@ public struct CalendarDate: Sendable {
     /// An integer suitable to be used as a key in a database table.
     ///
     /// - note: The ordering of ``CalendarDate`` values is the same as the ordering of their IDs. If both `date1` and `date2` are ``CalendarDate`` values, `date1` is ordered before `date2` when its ID is lower than `date2`'s.
-    public let id: Int
+    public let id: Int64
     
     /// Creates a calendar date from the current date at the moment of access.
     @inlinable
@@ -20,7 +20,7 @@ public struct CalendarDate: Sendable {
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer only to recreate a calendar date whose ID has been saved previously.
     @inlinable
-    public init(id: Int) {
+    public init(id: Int64) {
         self.id = id
     }
     
@@ -50,14 +50,14 @@ public struct CalendarDate: Sendable {
     // swift-format-ignore
     @inlinable
     public init(components: DateComponents, dLSTFlag: Bool = false) {
-        let dLST   = (dLSTFlag ? 1 : 0)       << Bits.dLSTOffset
-        let second = (components.second ?? 0) << Bits.secondOffset
-        let minute = (components.minute ?? 0) << Bits.minuteOffset
-        let hour   = (components.hour   ?? 0) << Bits.hourOffset
-        let day    = (components.day    ?? 0) << Bits.dayOffset
-        let month  = (components.month  ?? 0) << Bits.monthOffset
-        let year   = (components.year   ?? 0) << Bits.yearOffset
-        let era    = (components.era    ?? 0) << Bits.eraOffset
+        let dLST   = Int64(dLSTFlag ? 1 : 0)       << Bits.dLSTOffset
+        let second = Int64(components.second ?? 0) << Bits.secondOffset
+        let minute = Int64(components.minute ?? 0) << Bits.minuteOffset
+        let hour   = Int64(components.hour   ?? 0) << Bits.hourOffset
+        let day    = Int64(components.day    ?? 0) << Bits.dayOffset
+        let month  = Int64(components.month  ?? 0) << Bits.monthOffset
+        let year   = Int64(components.year   ?? 0) << Bits.yearOffset
+        let era    = Int64(components.era    ?? 0) << Bits.eraOffset
 
         id = dLST + second + minute + hour + day + month + year + era
     }
@@ -127,43 +127,43 @@ public struct CalendarDate: Sendable {
     /// The second component.
     @inlinable
     public var secondOfHour: Int {
-        (id & Bits.secondMask) >> Bits.secondOffset
+        Int((id & Bits.secondMask) >> Bits.secondOffset)
     }
     
     /// The minute component.
     @inlinable
     public var minuteOfHour: Int {
-        (id & Bits.minuteMask) >> Bits.minuteOffset
+        Int((id & Bits.minuteMask) >> Bits.minuteOffset)
     }
     
     /// The hour component.
     @inlinable
     public var hourOfDay: Int {
-        (id & Bits.hourMask) >> Bits.hourOffset
+        Int((id & Bits.hourMask) >> Bits.hourOffset)
     }
     
     /// The day component.
     @inlinable
     public var dayOfMonth: Int {
-        (id & Bits.dayMask) >> Bits.dayOffset
+        Int((id & Bits.dayMask) >> Bits.dayOffset)
     }
     
     /// The month component.
     @inlinable
     public var monthOfYear: Int {
-        (id & Bits.monthMask) >> Bits.monthOffset
+        Int((id & Bits.monthMask) >> Bits.monthOffset)
     }
     
     /// The year component.
     @inlinable
     public var yearOfEra: Int {
-        (id & Bits.yearMask) >> Bits.yearOffset
+        Int((id & Bits.yearMask) >> Bits.yearOffset)
     }
     
     /// The era component.
     @inlinable
     public var era: Int {
-        (id & Bits.eraMask) >> Bits.eraOffset
+        Int((id & Bits.eraMask) >> Bits.eraOffset)
     }
     
     // MARK: - Adding and Subtracting Components
@@ -401,7 +401,7 @@ extension CalendarDate: Codable {
     /// Creates a calendar date by decoding from the given decoder.
     @inlinable
     public init(from decoder: Decoder) throws {
-        self.init(id: try Int(from: decoder))
+        self.init(id: try Int64(from: decoder))
     }
     
     @inlinable
@@ -414,12 +414,12 @@ extension CalendarDate: Codable {
 
 extension CalendarDate: RawRepresentable {
     @inlinable
-    public var rawValue: Int {
+    public var rawValue: Int64 {
         id
     }
     
     @inlinable
-    public init?(rawValue: Int) {
+    public init?(rawValue: Int64) {
         self.init(id: rawValue)
     }
 }
@@ -495,15 +495,15 @@ enum Bits {
 
     // A mask starting at the lowest significant bit with a given length.
     @inlinable
-    static func mask(_ bits: Int) -> Int { (1 << bits) - 1 }
+    static func mask(_ bits: Int) -> Int64 { (Int64(1) << bits) - 1 }
 
-    @inlinable static var dLSTMask:   Int { mask(dLSTBits)   << dLSTOffset }
-    @inlinable static var secondMask: Int { mask(secondBits) << secondOffset }
-    @inlinable static var minuteMask: Int { mask(minuteBits) << minuteOffset }
-    @inlinable static var hourMask:   Int { mask(hourBits)   << hourOffset }
-    @inlinable static var dayMask:    Int { mask(dayBits)    << dayOffset }
-    @inlinable static var monthMask:  Int { mask(monthBits)  << monthOffset }
-    @inlinable static var weekMask:   Int { mask(weekBits)   << dayOffset }
-    @inlinable static var yearMask:   Int { mask(yearBits)   << yearOffset }
-    @inlinable static var eraMask:    Int { mask(eraBits)    << eraOffset }
+    @inlinable static var dLSTMask:   Int64 { mask(dLSTBits)   << dLSTOffset }
+    @inlinable static var secondMask: Int64 { mask(secondBits) << secondOffset }
+    @inlinable static var minuteMask: Int64 { mask(minuteBits) << minuteOffset }
+    @inlinable static var hourMask:   Int64 { mask(hourBits)   << hourOffset }
+    @inlinable static var dayMask:    Int64 { mask(dayBits)    << dayOffset }
+    @inlinable static var monthMask:  Int64 { mask(monthBits)  << monthOffset }
+    @inlinable static var weekMask:   Int64 { mask(weekBits)   << dayOffset }
+    @inlinable static var yearMask:   Int64 { mask(yearBits)   << yearOffset }
+    @inlinable static var eraMask:    Int64 { mask(eraBits)    << eraOffset }
 }

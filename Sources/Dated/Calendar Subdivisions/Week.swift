@@ -14,14 +14,14 @@ public struct Week: CalendarSubdivision {
     /// - note: The ordering of ``Week`` values is the same as the ordering
     /// of their IDs. If both `week1` and `week2` are ``Week`` values,
     /// `week1` is ordered before `week2` when its ID is lower than `week2`'s.
-    public let id: Int
+    public let id: Int64
     
     /// Creates a week value from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this initializer
     /// only to recreate a week value whose ID has been saved previously.
     @inlinable
-    public init(id: Int) {
+    public init(id: Int64) {
         self.id = id & (Bits.weekMask + Bits.yearMask + Bits.eraMask)
     }
     
@@ -38,9 +38,9 @@ public struct Week: CalendarSubdivision {
             [.weekOfYear, .yearForWeekOfYear, .era], from: date
         )
 
-        let week = (components.weekOfYear        ?? 0) << Bits.weekOffset
-        let year = (components.yearForWeekOfYear ?? 0) << Bits.yearOffset
-        let era  = (components.era               ?? 0) << Bits.eraOffset
+        let week = Int64(components.weekOfYear        ?? 0) << Bits.weekOffset
+        let year = Int64(components.yearForWeekOfYear ?? 0) << Bits.yearOffset
+        let era  = Int64(components.era               ?? 0) << Bits.eraOffset
 
         id = week + year + era
     }
@@ -70,9 +70,9 @@ public struct Week: CalendarSubdivision {
     }
 
     @usableFromInline init(_era: Int, _year: Int, _week: Int) {
-        let weekValue = _week << Bits.weekOffset
-        let yearValue = _year << Bits.yearOffset
-        let eraValue = _era << Bits.eraOffset
+        let weekValue = Int64(_week) << Bits.weekOffset
+        let yearValue = Int64(_year) << Bits.yearOffset
+        let eraValue = Int64(_era) << Bits.eraOffset
         id = weekValue + yearValue + eraValue
     }
     
@@ -81,19 +81,19 @@ public struct Week: CalendarSubdivision {
     /// The week component.
     @inlinable
     public var weekOfYear: Int {
-        (id & Bits.weekMask) >> Bits.weekOffset
+        Int((id & Bits.weekMask) >> Bits.weekOffset)
     }
     
     /// The year component.
     @inlinable
     public var yearOfEra: Int {
-        (id & Bits.yearMask) >> Bits.yearOffset
+        Int((id & Bits.yearMask) >> Bits.yearOffset)
     }
     
     /// The era component.
     @inlinable
     public var era: Int {
-        (id & Bits.eraMask) >> Bits.eraOffset
+        Int((id & Bits.eraMask) >> Bits.eraOffset)
     }
     
     /// All date components of the given week.

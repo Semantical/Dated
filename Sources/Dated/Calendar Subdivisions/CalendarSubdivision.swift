@@ -16,14 +16,14 @@ where Stride == Int {
     /// subdivisions of the same type in the calendar.
     ///
     /// This identifier is suitable to be used as a key in a database table.
-    var id: Int { get }
+    var id: Int64 { get }
     
     /// Creates a new instance from the given identifier.
     ///
     /// - important: Do not try to generate your own IDs. Use this
     /// initializer only to recreate a calendar subdivision whose ID
     /// has been saved previously.
-    init(id: Int)
+    init(id: Int64)
     
     /// Creates a calendar subdivision in the user's preferred calendar.
     init(_ date: Date)
@@ -90,7 +90,7 @@ extension CalendarSubdivision {
 // Conform to Codable
 extension CalendarSubdivision {
     public init(from decoder: Decoder) throws {
-        self.init(id: try Int(from: decoder))
+        self.init(id: try Int64(from: decoder))
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -139,12 +139,12 @@ extension CalendarSubdivision {
 // Conform to RawRepresentable
 extension CalendarSubdivision {
     @inlinable
-    public init?(rawValue: Int) {
+    public init?(rawValue: Int64) {
         self.init(id: rawValue)
     }
     
     @inlinable
-    public var rawValue: Int {
+    public var rawValue: Int64 {
         id
     }
 }
